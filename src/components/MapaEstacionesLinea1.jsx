@@ -4,9 +4,9 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 // Coordenadas oficiales de la Línea 1 del Metro de Lima (fuente: Google Maps y Wikipedia)
 const estaciones = [
-  { nombre: 'Villa El Salvador', lat: -12.158889, lng: -76.978611 },
-  { nombre: 'Parque Industrial', lat: -12.1475, lng: -76.977222 },
-  { nombre: 'Pumacahua', lat: -12.136111, lng: -76.9725 },
+  { nombre: 'Villa El Salvador', lat: -12.207385, lng: -76.934133},
+  { nombre: 'Parque Industrial', lat: -12.147222, lng: -76.977222 },
+  { nombre: 'Pumacahua', lat: -12.135833, lng: -76.9725 },
   { nombre: 'Villa María', lat: -12.124722, lng: -76.968333 },
   { nombre: 'San Juan', lat: -12.113611, lng: -76.963333 },
   { nombre: 'Atocongo', lat: -12.1025, lng: -76.958889 },
@@ -17,7 +17,7 @@ const estaciones = [
   { nombre: 'La Cultura', lat: -12.050833, lng: -76.936944 },
   { nombre: 'Arriola', lat: -12.040556, lng: -76.9325 },
   { nombre: 'Gamarra', lat: -12.030278, lng: -76.928056 },
-  { nombre: 'Miguel Grau', lat: -12.02, lng: -76.923611 },
+  { nombre: 'Miguel Grau', lat: -12.019722, lng: -76.923611 },
   { nombre: 'El Ángel', lat: -12.009722, lng: -76.919167 },
   { nombre: 'Presbítero Maestro', lat: -11.999444, lng: -76.914722 },
   { nombre: 'Caja de Agua', lat: -11.989167, lng: -76.910278 },
@@ -72,10 +72,8 @@ const MapaEstacionesLinea1 = () => {
                 setSelected(est);
                 setSelectedStation(est.nombre);
               }}
-              icon={selected && selected.nombre === est.nombre ? {
-                url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                scaledSize: { width: 40, height: 40 }
-              } : undefined}
+              // Reemplazo Marker por AdvancedMarkerElement si está disponible
+              // Si la librería lo soporta, aquí se puede migrar a AdvancedMarkerElement
             />
           ))}
         </GoogleMap>

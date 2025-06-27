@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Icon from './AppIcon';
 
 // Subcomponente: Sección de subida de imagen
@@ -174,6 +174,7 @@ const CustomOrderUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
   const [contactInfo, setContactInfo] = useState({ name: '', phone: '', email: '' });
+  const [showSuccess, setShowSuccess] = useState(false);
   const fileInputRef = useRef(null);
 
   // Handlers con useCallback para evitar renders innecesarios
@@ -235,7 +236,8 @@ const CustomOrderUpload = () => {
     setContactInfo(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleSubmit = useCallback((e) => {
+  // Cambia la función handleSubmit para enviar los datos al backend seguro
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     if (!uploadedImage) {
       alert('Por favor, sube una imagen de referencia');
@@ -245,17 +247,54 @@ const CustomOrderUpload = () => {
       alert('Por favor, completa tu nombre y teléfono');
       return;
     }
-    alert('¡Solicitud enviada! Te contactaremos pronto para confirmar los detalles de tu pedido personalizado.');
-    setUploadedImage(null);
-    setCustomMessage('');
-    setContactInfo({ name: '', phone: '', email: '' });
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    setIsUploading(true);
+    try {
+      // Prepara el formData para enviar imagen y datos
+      const formData = new FormData();
+      formData.append('image', uploadedImage.file);
+      formData.append('name', contactInfo.name);
+      formData.append('phone', contactInfo.phone);
+      formData.append('email', contactInfo.email || 'No proporcionado');
+      formData.append('message', customMessage || 'Sin mensaje personalizado');
+      const res = await fetch('/api/custom-order', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowSuccess(true);
+        setUploadedImage(null);
+        setCustomMessage('');
+        setContactInfo({ name: '', phone: '', email: '' });
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        setTimeout(() => setShowSuccess(false), 3000);
+      } else {
+        alert('Ocurrió un error al enviar tu solicitud. Intenta nuevamente.');
+      }
+    } catch (error) {
+      alert('Ocurrió un error al enviar tu solicitud. Intenta nuevamente.');
+      console.error(error);
+    } finally {
+      setIsUploading(false);
     }
-  }, [uploadedImage, contactInfo]);
+  }, [uploadedImage, contactInfo, customMessage, fileInputRef]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Popup de éxito */}
+      {showSuccess && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center animate-fade-in">
+            <div className="bg-green-100 rounded-full p-4 mb-4">
+              <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-green-700 mb-2">¡Solicitud enviada!</h3>
+            <p className="text-gray-600 text-center">Te contactaremos pronto para confirmar los detalles de tu pedido personalizado.</p>
+          </div>
+        </div>
+      )}
       <div className="text-center mb-12">
         <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mb-4">
           Pedidos Personalizados
