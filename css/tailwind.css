@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary Colors */
+  --color-primary: #F8BBD9; /* Soft blush pink - brand anchor */
+  --color-primary-50: #FEF7F3;
+  --color-primary-100: #FDE8E8;
+  --color-primary-200: #FBD5D5;
+  --color-primary-300: #F8BBD9; /* Main primary */
+  --color-primary-400: #F5A3C7;
+  --color-primary-500: #F28BB5;
+  --color-primary-600: #EF73A3;
+  --color-primary-700: #EC5B91;
+  --color-primary-800: #E9437F;
+  --color-primary-900: #E62B6D;
+
+  /* Secondary Colors */
+  --color-secondary: #B8C5A6; /* Sage green - freshness */
+  --color-secondary-50: #F7F9F5;
+  --color-secondary-100: #EFF3EB;
+  --color-secondary-200: #E7EDE1;
+  --color-secondary-300: #DFE7D7;
+  --color-secondary-400: #D7E1CD;
+  --color-secondary-500: #CFDBC3;
+  --color-secondary-600: #C7D5B9;
+  --color-secondary-700: #BFCFAF;
+  --color-secondary-800: #B8C5A6; /* Main secondary */
+  --color-secondary-900: #A8B596;
+
+  /* Accent Colors */
+  --color-accent: #D63384; /* Deep rose - CTAs only */
+  --color-accent-50: #FDF2F8;
+  --color-accent-100: #FCE7F3;
+  --color-accent-200: #FBCFE8;
+  --color-accent-300: #F9A8D4;
+  --color-accent-400: #F472B6;
+  --color-accent-500: #EC4899;
+  --color-accent-600: #D63384; /* Main accent */
+  --color-accent-700: #BE185D;
+  --color-accent-800: #9D174D;
+  --color-accent-900: #831843;
+
+  /* Background Colors */
+  --color-background: #FFF8F5; /* Clean canvas with warmth */
+  --color-surface: #FFFFFF; /* Product cards and forms */
+
+  /* Text Colors */
+  --color-text-primary: #2D3748; /* High contrast - gray-800 */
+  --color-text-secondary: #718096; /* Supporting details - gray-500 */
+
+  /* Status Colors */
+  --color-success: #38A169; /* Delivery confirmations - green-500 */
+  --color-warning: #ED8936; /* Same-day cutoff - orange-400 */
+  --color-error: #E53E3E; /* Form validation - red-500 */
+
+  /* Border Colors */
+  --color-border: #E2E8F0; /* Form inputs - gray-200 */
+  --color-border-active: #D63384; /* Active states - accent */
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent text-white font-poppins font-semibold px-6 py-3 rounded-lg shadow-accent transition-all duration-250 ease-in-out;
+  }
+
+  .btn-primary:hover {
+    @apply shadow-accent-lg transform -translate-y-0.5;
+  }
+
+  .card-product {
+    @apply bg-surface rounded-lg shadow-primary border border-gray-200 transition-all duration-150 ease-in-out;
+  }
+
+  .card-product:hover {
+    @apply shadow-primary-lg;
+  }
+
+  .input-field {
+    @apply border border-gray-200 rounded-md px-4 py-2 focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-150 ease-in-out;
+  }
+
+  .shadow-primary {
+    box-shadow: 0 4px 12px rgba(248, 187, 217, 0.15);
+  }
+
+  .shadow-primary-lg {
+    box-shadow: 0 6px 16px rgba(248, 187, 217, 0.2);
+  }
+
+  .shadow-accent {
+    box-shadow: 0 8px 24px rgba(214, 51, 132, 0.2);
+  }
+
+  .shadow-accent-lg {
+    box-shadow: 0 12px 32px rgba(214, 51, 132, 0.3);
+  }
+}
+
+@layer utilities {
+  .transition-250 {
+    transition-duration: 250ms;
+  }
+
+  .transition-150 {
+    transition-duration: 150ms;
+  }
+}

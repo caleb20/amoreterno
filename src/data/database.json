@@ -1,0 +1,489 @@
+{
+    "categories": [
+        { "id": "rosas", "name": "Rosas", "description": "Rosas frescas de todos los colores", "icon": "Rose" },
+        { "id": "tulipanes", "name": "Tulipanes", "description": "Tulipanes elegantes y coloridos", "icon": "Tulip" },
+        { "id": "girasoles", "name": "Girasoles", "description": "Girasoles radiantes y alegres", "icon": "Sunflower" },
+        { "id": "orquideas", "name": "Orquídeas", "description": "Orquídeas exóticas y sofisticadas", "icon": "Orchid" },
+        { "id": "mixtos", "name": "Mixtos", "description": "Arreglos mixtos de temporada", "icon": "Bouquet" }
+    ],
+    "occasions": [
+        {
+            "id": "cumpleanos",
+            "name": "Cumplea\u00f1os",
+            "description": "Celebra con alegr\u00eda",
+            "image": "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "productCount": 23,
+            "icon": "Cake",
+            "color": "text-warning",
+            "bgColor": "bg-warning-50",
+            "message": "🎂 Celebra cada año de vida con arreglos que transmiten alegría y buenos deseos"
+        },
+        {
+            "id": "aniversario",
+            "name": "Aniversario",
+            "description": "Renueva el amor",
+            "image": "https://images.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg",
+            "productCount": 18,
+            "icon": "Heart",
+            "color": "text-accent",
+            "bgColor": "bg-accent-50",
+            "message": "💕 Conmemora momentos especiales con flores que hablan de amor duradero"
+        },
+        {
+            "id": "amor",
+            "name": "Amor",
+            "description": "Expresa tus sentimientos",
+            "image": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=2940&auto=format&fit=crop",
+            "productCount": 31,
+            "icon": "HeartHandshake",
+            "color": "text-error",
+            "bgColor": "bg-error-50",
+            "message": "❤️ Expresa tus sentimientos más profundos con arreglos románticos únicos"
+        },
+        {
+            "id": "nacimiento",
+            "name": "Nacimiento",
+            "description": "Bienvenida nueva vida",
+            "image": "https://images.pixabay.com/photo/2020/04/10/17/39/spring-5026354_1280.jpg",
+            "productCount": 15,
+            "icon": "Baby",
+            "color": "text-primary",
+            "bgColor": "bg-primary-50",
+            "message": "👶 Celebra la llegada de nueva vida con arreglos tiernos y delicados"
+        },
+        {
+            "id": "disculpas",
+            "name": "Disculpas",
+            "description": "Pide perdón de corazón",
+            "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=compress&cs=tinysrgb&w=800",
+            "productCount": 10,
+            "icon": "HandHeart",
+            "color": "text-secondary",
+            "bgColor": "bg-secondary-50",
+            "message": "🤝 Pide perdón de corazón con flores que transmiten sinceridad y arrepentimiento"
+        }
+    ],
+    "products": [
+        {
+            "id": "desayuno-sorpresa",
+            "name": "Desayuno Sorpresa para Engre\u00edr",
+            "description": "Flores frescas + desayuno completo + tarjeta personalizada",
+            "price": 89.9,
+            "originalPrice": null,
+            "category": "rosas",
+            "occasion": [
+                "cumpleanos",
+                "amor"
+            ],
+            "image": "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "rating": 5.0,
+            "reviewCount": 127,
+            "deliveryTime": "2-3 horas",
+            "tags": [
+                "popular",
+                "combo"
+            ],
+            "status": "available",
+            "featured": true
+        },
+        {
+            "id": "ramo-inspiracion",
+            "name": "El Ramo Inspiraci\u00f3n Magia",
+            "description": "Rosas, tulipanes y flores de temporada en arreglo \u00fanico",
+            "price": 65.9,
+            "originalPrice": null,
+            "category": "tulipanes",
+            "occasion": [
+                "aniversario",
+                "amor"
+            ],
+            "image": "https://images.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg",
+            "rating": 5.0,
+            "reviewCount": 89,
+            "deliveryTime": "1-2 horas",
+            "tags": [
+                "exclusivo"
+            ],
+            "status": "available",
+            "featured": true
+        },
+        {
+            "id": "combo-completo",
+            "name": "Flores + Cookies + Taza Magia",
+            "description": "Arreglo floral + cookies artesanales + taza personalizada",
+            "price": 75.9,
+            "originalPrice": 95.9,
+            "category": "girasoles",
+            "occasion": [
+                "cumpleanos",
+                "amor"
+            ],
+            "image": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=2940&auto=format&fit=crop",
+            "rating": 5.0,
+            "reviewCount": 156,
+            "deliveryTime": "2-3 horas",
+            "tags": [
+                "combo",
+                "oferta"
+            ],
+            "status": "available",
+            "featured": true,
+            "offerEndsIn": "1 d\u00eda"
+        },
+        {
+            "id": "rosas-rojas-oferta",
+            "name": "Rosas Rojas Cl\u00e1sicas",
+            "description": "Docena de rosas rojas premium con elegante presentaci\u00f3n",
+            "price": 45.9,
+            "originalPrice": 65.9,
+            "category": "rosas",
+            "occasion": [
+                "amor",
+                "aniversario"
+            ],
+            "image": "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "rating": 4.8,
+            "reviewCount": 203,
+            "deliveryTime": "1-2 horas",
+            "tags": [
+                "oferta",
+                "clasico"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 30,
+            "offerEndsIn": "8 horas"
+        },
+        {
+            "id": "tulipanes-oferta",
+            "name": "Tulipanes Multicolor",
+            "description": "Hermoso ramo de tulipanes en colores vibrantes",
+            "price": 38.9,
+            "originalPrice": 52.9,
+            "category": "tulipanes",
+            "occasion": [
+                "cumpleanos",
+                "nacimiento"
+            ],
+            "image": "https://images.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg",
+            "rating": 4.7,
+            "reviewCount": 145,
+            "deliveryTime": "2-3 horas",
+            "tags": [
+                "oferta",
+                "colorido"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 25,
+            "offerEndsIn": "12 horas"
+        },
+        {
+            "id": "girasoles-oferta",
+            "name": "Girasoles Radiantes",
+            "description": "Ramo de girasoles que ilumina cualquier espacio",
+            "price": 42.9,
+            "originalPrice": 53.9,
+            "category": "girasoles",
+            "occasion": [
+                "cumpleanos",
+                "amor"
+            ],
+            "image": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=2940&auto=format&fit=crop",
+            "rating": 4.9,
+            "reviewCount": 178,
+            "deliveryTime": "1-3 horas",
+            "tags": [
+                "oferta",
+                "brillante"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 20,
+            "offerEndsIn": "6 horas"
+        },
+        {
+            "id": "orquideas-oferta",
+            "name": "Orqu\u00eddeas Elegantes",
+            "description": "Exquisitas orqu\u00eddeas para ocasiones especiales",
+            "price": 89.9,
+            "originalPrice": 138.9,
+            "category": "orquideas",
+            "occasion": [
+                "aniversario",
+                "amor"
+            ],
+            "image": "https://images.pixabay.com/photo/2020/04/10/17/39/spring-5026354_1280.jpg",
+            "rating": 5.0,
+            "reviewCount": 94,
+            "deliveryTime": "2-4 horas",
+            "tags": [
+                "oferta",
+                "premium"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 35,
+            "offerEndsIn": "4 horas"
+        },
+        {
+            "id": "mixto-oferta",
+            "name": "Arreglo Mixto Premium",
+            "description": "Combinaci\u00f3n perfecta de flores de temporada",
+            "price": 67.9,
+            "originalPrice": 94.9,
+            "category": "rosas",
+            "occasion": [
+                "cumpleanos",
+                "aniversario"
+            ],
+            "image": "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "rating": 4.8,
+            "reviewCount": 167,
+            "deliveryTime": "2-3 horas",
+            "tags": [
+                "oferta",
+                "mixto"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 28,
+            "offerEndsIn": "10 horas"
+        },
+        {
+            "id": "regalo-completo-oferta",
+            "name": "Regalo Completo Especial",
+            "description": "Flores + chocolates + globos + peluche + tarjeta",
+            "price": 125.9,
+            "originalPrice": 209.9,
+            "category": "tulipanes",
+            "occasion": [
+                "cumpleanos",
+                "amor",
+                "aniversario"
+            ],
+            "image": "https://images.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg",
+            "rating": 4.9,
+            "reviewCount": 231,
+            "deliveryTime": "3-4 horas",
+            "tags": [
+                "oferta",
+                "completo",
+                "premium"
+            ],
+            "status": "available",
+            "featured": false,
+            "discount": 40,
+            "offerEndsIn": "2 horas"
+        }
+    ],
+    "testimonials": [
+        {
+            "id": "1",
+            "name": "Mar\u00eda Gonz\u00e1lez",
+            "location": "San Isidro",
+            "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=200&auto=format&fit=crop",
+            "rating": 5,
+            "comment": "Incre\u00edble servicio! Las flores llegaron exactamente a tiempo para el cumplea\u00f1os de mi mam\u00e1. Estaban frescas y hermosas. Definitivamente volver\u00e9 a ordenar.",
+            "deliveryLocation": "Miraflores",
+            "daysAgo": 2,
+            "productPurchased": "desayuno-sorpresa"
+        },
+        {
+            "id": "2",
+            "name": "Carlos Mendoza",
+            "location": "Lima Centro",
+            "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+            "rating": 5,
+            "comment": "Mi esposa qued\u00f3 encantada con el ramo de aniversario. La calidad es excepcional y el servicio al cliente por WhatsApp es muy r\u00e1pido y amable.",
+            "deliveryLocation": "San Borja",
+            "daysAgo": 7,
+            "productPurchased": "ramo-inspiracion"
+        },
+        {
+            "id": "3",
+            "name": "Ana Rodr\u00edguez",
+            "location": "Callao",
+            "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop",
+            "rating": 5,
+            "comment": "Ped\u00ed el desayuno sorpresa y fue perfecto. Mi hermana no pod\u00eda creer lo hermoso que estaba todo. Magia Florer\u00eda super\u00f3 mis expectativas.",
+            "deliveryLocation": "Bellavista",
+            "daysAgo": 3,
+            "productPurchased": "combo-completo"
+        }
+    ],
+    "heroSlides": [
+        {
+            "id": "1",
+            "title": "Env\u00edo de Flores a Domicilio",
+            "subtitle": "Florer\u00eda en Lima",
+            "description": "Entrega garantizada hoy antes de las 6pm",
+            "image": "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "ctaText": "Ordenar Ahora",
+            "ctaLink": "https://wa.me/51987654321"
+        },
+        {
+            "id": "2",
+            "title": "Arreglos \u00danicos",
+            "subtitle": "Dise\u00f1ados con Amor",
+            "description": "Personaliza tu regalo perfecto",
+            "image": "https://images.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg",
+            "ctaText": "Ordenar Ahora",
+            "ctaLink": "https://wa.me/51987654321"
+        },
+        {
+            "id": "3",
+            "title": "Alegr\u00eda Garantizada",
+            "subtitle": "Flores que Iluminan",
+            "description": "Momentos especiales merecen flores especiales",
+            "image": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=2940&auto=format&fit=crop",
+            "ctaText": "Ordenar Ahora",
+            "ctaLink": "https://wa.me/51987654321"
+        },
+        {
+            "id": "4",
+            "title": "Elegancia Natural",
+            "subtitle": "Orqu\u00eddeas Ex\u00f3ticas",
+            "description": "Para ocasiones verdaderamente especiales",
+            "image": "https://images.pixabay.com/photo/2020/04/10/17/39/spring-5026354_1280.jpg",
+            "ctaText": "Ordenar Ahora",
+            "ctaLink": "https://wa.me/51987654321"
+        }
+    ],
+    "flowerSymbolism": [
+        {
+            "name": "Rosas Rojas",
+            "meaning": "Amor apasionado y romance eterno",
+            "color": "error"
+        },
+        {
+            "name": "Rosas Rosadas",
+            "meaning": "Gratitud, admiraci\u00f3n y cari\u00f1o",
+            "color": "primary"
+        },
+        {
+            "name": "Girasoles",
+            "meaning": "Alegr\u00eda, optimismo y lealtad",
+            "color": "warning"
+        },
+        {
+            "name": "Tulipanes",
+            "meaning": "Amor perfecto y elegancia",
+            "color": "secondary"
+        },
+        {
+            "name": "Orqu\u00eddeas",
+            "meaning": "Belleza ex\u00f3tica y fuerza",
+            "color": "accent"
+        },
+        {
+            "name": "Flores Blancas",
+            "meaning": "Pureza, paz y nuevos comienzos",
+            "color": "success"
+        }
+    ],
+    "deliveryZones": [
+        {
+            "name": "Lima Centro",
+            "status": "available",
+            "cutoffTime": "18:00",
+            "deliveryTime": "2-3 horas"
+        },
+        {
+            "name": "Miraflores",
+            "status": "available",
+            "cutoffTime": "19:00",
+            "deliveryTime": "1-2 horas"
+        },
+        {
+            "name": "San Isidro",
+            "status": "available",
+            "cutoffTime": "19:00",
+            "deliveryTime": "1-2 horas"
+        },
+        {
+            "name": "Callao",
+            "status": "limited",
+            "cutoffTime": "17:00",
+            "deliveryTime": "3-4 horas"
+        }
+    ],
+    "stats": {},
+    "companyInfo": {
+        "name": "Amor Eterno",
+        "ruc": "20123456789",
+        "phone": "987317731",
+        "whatsapp": "+51 987317731",
+        "email": "info@amoreterno.pe",
+        "address": "Lima y Callao, Perú",
+        "workingHours": "Lun-Dom: 8:00 AM - 8:00 PM",
+        "responseTime": "2 minutos",
+        "socialMedia": {
+            "twitter": "#",
+            "facebook": "#",
+            "instagram": "#",
+            "pinterest": "#"
+        }
+    },
+    "paymentMethods": [
+        {
+            "name": "Yape",
+            "available": true,
+            "color": "blue"
+        },
+        {
+            "name": "Plin",
+            "available": true,
+            "color": "green"
+        },
+        {
+            "name": "Transferencia",
+            "available": true,
+            "color": "gray"
+        },
+        {
+            "name": "Contraentrega",
+            "available": true,
+            "color": "yellow"
+        }
+    ],
+    "bankAccounts": [
+        {
+            "bank": "BCP",
+            "accountNumber": "191-12345678-0-12",
+            "cci": "00219100123456789012",
+            "holder": "Magia Florería SAC",
+            "type": "Cuenta Corriente Soles"
+        },
+        {
+            "bank": "Interbank",
+            "accountNumber": "003-4567890123",
+            "cci": "00345678901234567891",
+            "holder": "Magia Florería SAC",
+            "type": "Cuenta Simple Soles"
+        }
+    ],
+    "features": [
+        {
+            "title": "Entrega R\u00e1pida",
+            "description": "Entrega el mismo d\u00eda garantizada en Lima y Callao. Nuestro equipo de delivery est\u00e1 listo para llevar tus flores frescas en tiempo r\u00e9cord.",
+            "icon": "lightning",
+            "color": "success",
+            "stat": "Promedio: 2.5 horas"
+        },
+        {
+            "title": "Pagos Seguros",
+            "description": "Acepta todos los m\u00e9todos de pago peruanos: Yape, Plin, tarjetas de cr\u00e9dito y d\u00e9bito. Transacciones 100% seguras y protegidas.",
+            "icon": "shield",
+            "color": "primary",
+            "stat": "100% Seguro"
+        },
+        {
+            "title": "Personalizaci\u00f3n",
+            "description": "Cada arreglo puede ser personalizado con tu mensaje especial, colores preferidos y extras como chocolates, globos o peluches.",
+            "icon": "heart",
+            "color": "accent",
+            "stat": "Sin costo adicional"
+        }
+    ]
+}
