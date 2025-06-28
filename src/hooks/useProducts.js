@@ -11,7 +11,6 @@ export const useProducts = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [occasions, setOccasions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,13 +20,11 @@ export const useProducts = () => {
       setLoading(true);
       setError(null);
       try {
-        const [productsRes, categoriesRes, occasionsRes] = await Promise.all([
+        const [productsRes, occasionsRes] = await Promise.all([
           api.get('/api/products'),
-          api.get('/api/categories'),
           api.get('/api/occasions'),
         ]);
         setProducts(productsRes.data);
-        setCategories(categoriesRes.data);
         setOccasions(occasionsRes.data);
       } catch (err) {
         setError(err.message || 'Error al cargar los datos');
@@ -119,7 +116,6 @@ export const useProducts = () => {
     allProducts: products,
     featuredProducts,
     saleProducts,
-    categories,
     occasions,
     filters,
     searchTerm,

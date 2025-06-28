@@ -1,42 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-
-// Coordenadas oficiales de la Línea 1 del Metro de Lima (fuente: Google Maps y Wikipedia)
-const estaciones = [
-  { nombre: 'Villa El Salvador', lat: -12.207385, lng: -76.934133},
-  { nombre: 'Parque Industrial', lat: -12.147222, lng: -76.977222 },
-  { nombre: 'Pumacahua', lat: -12.135833, lng: -76.9725 },
-  { nombre: 'Villa María', lat: -12.124722, lng: -76.968333 },
-  { nombre: 'San Juan', lat: -12.113611, lng: -76.963333 },
-  { nombre: 'Atocongo', lat: -12.1025, lng: -76.958889 },
-  { nombre: 'Jorge Chávez', lat: -12.092222, lng: -76.954444 },
-  { nombre: 'Ayacucho', lat: -12.081944, lng: -76.950278 },
-  { nombre: 'Los Cabitos', lat: -12.071389, lng: -76.945833 },
-  { nombre: 'San Borja Sur', lat: -12.061111, lng: -76.941111 },
-  { nombre: 'La Cultura', lat: -12.050833, lng: -76.936944 },
-  { nombre: 'Arriola', lat: -12.040556, lng: -76.9325 },
-  { nombre: 'Gamarra', lat: -12.030278, lng: -76.928056 },
-  { nombre: 'Miguel Grau', lat: -12.019722, lng: -76.923611 },
-  { nombre: 'El Ángel', lat: -12.009722, lng: -76.919167 },
-  { nombre: 'Presbítero Maestro', lat: -11.999444, lng: -76.914722 },
-  { nombre: 'Caja de Agua', lat: -11.989167, lng: -76.910278 },
-  { nombre: 'Pirámide del Sol', lat: -11.978889, lng: -76.905833 },
-  { nombre: 'Los Jardines', lat: -11.968611, lng: -76.901389 },
-  { nombre: 'San Carlos', lat: -11.958333, lng: -76.897222 },
-  { nombre: 'San Martín', lat: -11.948056, lng: -76.892778 },
-  { nombre: 'Santa Rosa', lat: -11.937778, lng: -76.888333 },
-  { nombre: 'Bayóvar', lat: -11.9275, lng: -76.883889 }
-];
-
+import useStations from '../hooks/useStations';
 
 const MapaEstacionesLinea1 = () => {
   const { selectedStation, setSelectedStation } = useCart();
-  const [selected, setSelected] = useState(selectedStation ? estaciones.find(e => e.nombre === selectedStation) : null);
+  const { stations: estaciones, loading: loadingStations, error: errorStations } = useStations();
+  const [selected, setSelected] = useState(null);
 
   const containerStyle = {
-    width: '100%',
-    maxWidth: 700,
+    width: '100vw',
+    maxWidth: '100%',
     height: '400px',
     borderRadius: '12px',
     border: '1px solid #eee',
@@ -44,7 +18,7 @@ const MapaEstacionesLinea1 = () => {
   };
   // Centrar el mapa en la estación seleccionada o en el centro general
   const center = selected
-    ? { lat: selected.lat, lng: selected.lng }
+    ? { lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }
     : { lat: -12.09, lng: -76.92 };
 
   // Reemplaza 'TU_API_KEY' por tu API Key de Google Maps
@@ -52,7 +26,20 @@ const MapaEstacionesLinea1 = () => {
     googleMapsApiKey: 'AIzaSyAWG6XXnjhPvjOKZMDIT3NKMfQGjnRAs6M',
   });
 
-  if (!isLoaded) return <div className="text-center text-text-secondary">Cargando mapa...</div>;
+  // Si hay una estación seleccionada en el contexto, sincronizar con el estado local
+  useEffect(() => {
+    if (selectedStation && estaciones.length > 0) {
+      const found = estaciones.find(e => e.nombre === selectedStation);
+      setSelected(found || null);
+    } else if (!selectedStation && estaciones.length > 0) {
+      setSelected(null);
+    }
+  }, [selectedStation, estaciones]);
+
+  // Evitar renderizar el mapa y botones si estaciones está vacío
+  if (!isLoaded || loadingStations) return <div className="text-center text-text-secondary">Cargando mapa...</div>;
+  if (errorStations) return <div className="text-center text-error">{errorStations}</div>;
+  if (!estaciones || estaciones.length === 0) return <div className="text-center text-error">No hay estaciones disponibles.</div>;
 
   return (
     <div className="my-8">
@@ -66,39 +53,77 @@ const MapaEstacionesLinea1 = () => {
           {estaciones.map(est => (
             <Marker
               key={est.nombre}
-              position={{ lat: est.lat, lng: est.lng }}
+              position={{ lat: parseFloat(est.lat), lng: parseFloat(est.lng) }}
               title={est.nombre}
               onClick={() => {
                 setSelected(est);
                 setSelectedStation(est.nombre);
               }}
-              // Reemplazo Marker por AdvancedMarkerElement si está disponible
-              // Si la librería lo soporta, aquí se puede migrar a AdvancedMarkerElement
             />
           ))}
+          {/* Puntero especial para la estación seleccionada */}
+          {selected && (
+            <Marker
+              position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
+              title={selected.nombre}
+              icon={{
+                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                scaledSize: { width: 40, height: 40 }
+              }}
+            />
+          )}
         </GoogleMap>
       </div>
+      {/* Selector de estación: combo en mobile, botones en desktop */}
       <div className="flex flex-wrap justify-center gap-2 mt-4">
-        {estaciones.map(est => (
-          <button
-            key={est.nombre}
-            onClick={() => {
+        {/* Combo para mobile */}
+        <div className="w-full md:hidden mb-4 flex justify-center">
+          <select
+            className="w-full max-w-xs mx-auto px-3 py-1.5 rounded-md border border-gray-300 text-sm text-text-primary bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+            value={selected ? selected.nombre : ''}
+            onChange={e => {
+              const est = estaciones.find(est => est.nombre === e.target.value);
               setSelected(est);
-              setSelectedStation(est.nombre);
-              // Notificación visual tipo carrito
-              const notification = document.createElement('div');
-              notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
-              notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${est.nombre}</b></span>\n      </div>\n    `;
-              document.body.appendChild(notification);
-              setTimeout(() => {
-                document.body.removeChild(notification);
-              }, 3500);
+              setSelectedStation(est ? est.nombre : '');
+              if (est) {
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${est.nombre}</b></span>\n      </div>\n    `;
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                  document.body.removeChild(notification);
+                }, 3500);
+              }
             }}
-            className={`px-3 py-2 rounded-lg border text-xs font-semibold transition-all duration-200 ${selected && selected.nombre === est.nombre ? 'bg-accent text-white border-accent' : 'bg-surface text-text-secondary border-gray-300 hover:bg-accent hover:text-white hover:border-accent'}`}
           >
-            🚉 {est.nombre}
-          </button>
-        ))}
+            <option value="">Selecciona una estación...</option>
+            {estaciones.map(est => (
+              <option key={est.nombre} value={est.nombre}>🚉 {est.nombre}</option>
+            ))}
+          </select>
+        </div>
+        {/* Botones para desktop */}
+        <div className="hidden md:flex flex-wrap justify-center gap-2 w-full">
+          {estaciones.map(est => (
+            <button
+              key={est.nombre}
+              onClick={() => {
+                setSelected(est);
+                setSelectedStation(est.nombre);
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${est.nombre}</b></span>\n      </div>\n    `;
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                  document.body.removeChild(notification);
+                }, 3500);
+              }}
+              className={`px-3 py-2 rounded-lg border text-xs font-semibold transition-all duration-200 ${selected && selected.nombre === est.nombre ? 'bg-accent text-white border-accent' : 'bg-surface text-text-secondary border-gray-300 hover:bg-accent hover:text-white hover:border-accent'}`}
+            >
+              🚉 {est.nombre}
+            </button>
+          ))}
+        </div>
       </div>
       {selected && (
         <div className="mt-4 text-center">

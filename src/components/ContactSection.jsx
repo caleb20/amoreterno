@@ -10,22 +10,15 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [companyInfo, setCompanyInfo] = useState(null);
-  const [paymentMethods, setPaymentMethods] = useState([]);
-  const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      api.get('/api/company-info'),
-      api.get('/api/payment-methods'),
-      api.get('/api/features')
-    ])
-      .then(([companyRes, paymentRes, featuresRes]) => {
-        setCompanyInfo(companyRes.data);
-        setPaymentMethods(paymentRes.data);
-        setFeatures(featuresRes.data);
+    api.get('/api/company-info')
+      .then((companyRes) => {
+        // companyRes.data es un array, tomar el primer elemento
+        setCompanyInfo(Array.isArray(companyRes.data) ? companyRes.data[0] : companyRes.data);
         setLoading(false);
       })
       .catch(() => {
@@ -90,14 +83,7 @@ const ContactSection = () => {
         </div>
         {/* Mapa de estaciones */}
         <div className="mb-6">
-          {/* El mapa se muestra solo en desktop, pero puedes quitar la clase si quieres que sea global */}
-          <div className="hidden md:block">
-            <MapaEstacionesLinea1 />
-          </div>
-          {/* En mobile, solo el texto */}
-          <div className="md:hidden text-center text-text-secondary text-sm mt-4">
-            Ver mapa de estaciones en versión escritorio.
-          </div>
+          <MapaEstacionesLinea1 />
         </div>
         <div className="grid md:grid-cols-2 gap-12">
           {/* Contact Information */}
@@ -240,22 +226,6 @@ const ContactSection = () => {
                 {isSubmitting ? 'Suscribiendo...' : 'Suscribirse y Recibir 10% de Descuento'}
               </button>
             </form>
-
-            {/* Benefits */}
-            <div className="space-y-3">
-              {features.slice(0, 3).map((feature, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                  </svg>
-                  <span className="text-sm text-text-secondary">
-                    {index === 0 && 'Descuentos exclusivos para suscriptores'}
-                    {index === 1 && 'Acceso anticipado a nuevos productos'}
-                    {index === 2 && 'Tips de cuidado y decoración'}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

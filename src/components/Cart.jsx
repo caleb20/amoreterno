@@ -19,11 +19,18 @@ const Cart = () => {
   const { selectedStation, setSelectedStation } = useCart();
   const [isProvince, setIsProvince] = useState(false);
   const [companyInfo, setCompanyInfo] = useState(null);
+  const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
     api.get('/api/company-info')
       .then(res => setCompanyInfo(res.data))
       .catch(() => setCompanyInfo(null));
+  }, []);
+
+  useEffect(() => {
+    api.get('/api/bank-accounts')
+      .then(res => setBankAccounts(res.data))
+      .catch(() => setBankAccounts([]));
   }, []);
 
   if (!isOpen) return null;
@@ -58,7 +65,7 @@ const Cart = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed inset-y-0 right-0 w-[480px] bg-surface shadow-2xl z-50 transition-all duration-500 ease-in-out transform translate-x-0 animate-slide-cart">
+      <div className="fixed inset-y-0 right-0 w-full max-w-full sm:w-[400px] md:w-[480px] bg-surface shadow-2xl z-50 transition-all duration-500 ease-in-out transform translate-x-0 animate-slide-cart">
 
         <div className="h-full flex flex-col">
           {/* Cart Header */}
@@ -260,11 +267,11 @@ const Cart = () => {
                     {selectedPayment === 'transfer' && (
                       <div>
                         <h4 className="font-semibold text-text-primary mb-1">Transferencia Bancaria</h4>
-                        {database.bankAccounts && database.bankAccounts.length > 0 ? (
+                        {bankAccounts && bankAccounts.length > 0 ? (
                           <ul className="space-y-2 text-xs">
-                            {database.bankAccounts.map((acc, idx) => (
+                            {bankAccounts.map((acc, idx) => (
                               <li key={idx} className="border rounded p-2">
-                                <span className="font-bold">{acc.bank}:</span> {acc.accountNumber}<br />
+                                <span className="font-bold">{acc.bank}:</span> {acc.account_number}<br />
                                 <span className="font-bold">CCI:</span> {acc.cci}<br />
                                 <span className="font-bold">Titular:</span> {acc.holder}<br />
                                 <span className="font-bold">Tipo:</span> {acc.type}

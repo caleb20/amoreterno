@@ -10,7 +10,8 @@ const Footer = () => {
     setLoading(true);
     api.get('/api/company-info')
       .then(res => {
-        setCompanyInfo(res.data);
+        // companyInfo es un array, tomar el primer elemento
+        setCompanyInfo(Array.isArray(res.data) ? res.data[0] : res.data);
         setLoading(false);
       })
       .catch(() => {

@@ -1,6 +1,5 @@
 import formidable from 'formidable';
 import fs from 'fs';
-import emailjs from '@emailjs/nodejs';
 
 export const config = {
   api: {
@@ -12,43 +11,42 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
-
-  const form = new formidable.IncomingForm();
+  const form = formidable({ multiples: false });
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      return res.status(500).json({ error: 'Error al procesar el formulario' });
+      console.error('Error formidable:', err);
+      res.status(500).json({ error: 'Error al procesar el formulario', details: err.message });
+      return;
     }
     try {
+      console.log('Campos recibidos:', fields);
+      console.log('Archivos recibidos:', files);
+      let imageFile = files.image;
+      if (Array.isArray(imageFile)) imageFile = imageFile[0];
+      if (!imageFile || !imageFile.filepath) {
+        console.error('No se recibió archivo de imagen válido:', imageFile);
+        return res.status(400).json({ error: 'No se recibió archivo de imagen válido' });
+      }
       // 1. Subir imagen a imgbb
       let imageUrl = '';
-      if (files.image) {
-        const imageData = fs.readFileSync(files.image.filepath, { encoding: 'base64' });
+      try {
+        const fileData = fs.readFileSync(imageFile.filepath);
         const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
           method: 'POST',
-          body: new URLSearchParams({ image: imageData }),
+          body: new URLSearchParams({ image: fileData.toString('base64') }),
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
         const imgbbData = await imgbbRes.json();
         imageUrl = imgbbData.data.url;
+      } catch (uploadError) {
+        console.error('Error al subir la imagen a imgbb:', uploadError);
+        return res.status(500).json({ error: 'Error al subir la imagen' });
       }
-      // 2. Enviar email con EmailJS
-      const templateParams = {
-        from_name: fields.name,
-        from_phone: fields.phone,
-        from_email: fields.email || 'No proporcionado',
-        message: fields.message || 'Sin mensaje personalizado',
-        image_url: imageUrl,
-        image_filename: files.image ? files.image.originalFilename : '',
-      };
-      await emailjs.send(
-        process.env.EMAILJS_SERVICE_ID,
-        process.env.EMAILJS_TEMPLATE_ID,
-        templateParams,
-        { publicKey: process.env.EMAILJS_PUBLIC_KEY }
-      );
-      return res.status(200).json({ success: true });
+      // Solo responder con la URL de la imagen
+      return res.status(200).json({ success: true, imageUrl });
     } catch (error) {
-      return res.status(500).json({ error: 'Error al procesar la solicitud', details: error.message });
+      console.error('Error general en custom-order:', error);
+      res.status(500).json({ error: 'Error al procesar la solicitud', details: error.message });
     }
   });
 }

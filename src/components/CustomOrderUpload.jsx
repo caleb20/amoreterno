@@ -260,15 +260,57 @@ const CustomOrderUpload = () => {
         method: 'POST',
         body: formData,
       });
-      const data = await res.json();
-      if (data.success) {
-        setShowSuccess(true);
-        setUploadedImage(null);
-        setCustomMessage('');
-        setContactInfo({ name: '', phone: '', email: '' });
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        setTimeout(() => setShowSuccess(false), 3000);
+      let data;
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        console.error('Error al parsear respuesta JSON:', jsonErr);
+        alert('Error inesperado al procesar la respuesta del servidor.');
+        setIsUploading(false);
+        return;
+      }
+      console.log('Respuesta del backend:', data);
+      if (data.success && data.imageUrl) {
+        // Enviar email con EmailJS desde el frontend
+        try {
+          // Carga EmailJS si no está cargado
+          if (!window.emailjs) {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js';
+              script.onload = resolve;
+              script.onerror = reject;
+              document.body.appendChild(script);
+            });
+          }
+          // Inicializa EmailJS
+          window.emailjs.init('yXg6YZq8x4NZFxZNi');
+          // Prepara los parámetros para la plantilla
+          const templateParams = {
+            name: contactInfo.name,
+            phone: contactInfo.phone,
+            email: contactInfo.email || 'No proporcionado',
+            message: customMessage || 'Sin mensaje personalizado',
+            image_url: data.imageUrl,
+          };
+          const result = await window.emailjs.send(
+            'service_dbe7uxl',
+            'template_cg3t2y1',
+            templateParams
+          );
+          console.log('Email enviado:', result);
+          setShowSuccess(true);
+          setUploadedImage(null);
+          setCustomMessage('');
+          setContactInfo({ name: '', phone: '', email: '' });
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          setTimeout(() => setShowSuccess(false), 3000);
+        } catch (emailErr) {
+          console.error('Error al enviar email con EmailJS:', emailErr);
+          alert('La imagen se subió correctamente, pero hubo un error al enviar el email de confirmación. Por favor, contáctanos directamente.');
+        }
       } else {
+        console.error('Error reportado por backend:', data);
         alert('Ocurrió un error al enviar tu solicitud. Intenta nuevamente.');
       }
     } catch (error) {
@@ -280,52 +322,60 @@ const CustomOrderUpload = () => {
   }, [uploadedImage, contactInfo, customMessage, fileInputRef]);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Popup de éxito */}
-      {showSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center animate-fade-in">
-            <div className="bg-green-100 rounded-full p-4 mb-4">
-              <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-green-700 mb-2">¡Solicitud enviada!</h3>
-            <p className="text-gray-600 text-center">Te contactaremos pronto para confirmar los detalles de tu pedido personalizado.</p>
+    <div className="min-h-screen bg-background py-10">
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-primary-500 p-6">
+          <h1 className="text-3xl font-extrabold text-white">
+            Orden Personalizada
+          </h1>
+          <p className="text-sm text-primary-100 mt-1">
+            Completa los siguientes pasos para crear tu orden personalizada.
+          </p>
+        </div>
+        <div className="divide-y divide-border md:divide-y-0 md:divide-x flex flex-col md:flex-row">
+          {/* Sección de subida de imagen */}
+          <div className="md:w-1/2">
+            <ImageUploadSection
+              uploadedImage={uploadedImage}
+              isDragOver={isDragOver}
+              isUploading={isUploading}
+              fileInputRef={fileInputRef}
+              handleFileInputChange={handleFileInputChange}
+              handleDrop={handleDrop}
+              handleDragOver={handleDragOver}
+              handleDragLeave={handleDragLeave}
+              handleRemoveImage={handleRemoveImage}
+            />
+          </div>
+          {/* Formulario de detalles del pedido */}
+          <div className="md:w-1/2">
+            <OrderDetailsForm
+              customMessage={customMessage}
+              setCustomMessage={setCustomMessage}
+              contactInfo={contactInfo}
+              handleInputChange={handleInputChange}
+              handleSubmit={handleSubmit}
+              uploadedImage={uploadedImage}
+              isUploading={isUploading}
+            />
           </div>
         </div>
-      )}
-      <div className="text-center mb-12">
-        <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mb-4">
-          Pedidos Personalizados
-        </h2>
-        <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-          ¿Tienes una idea específica? Sube una foto de referencia y crearemos el arreglo perfecto para ti
-        </p>
-      </div>
-      <div className="bg-background rounded-2xl shadow-lg border border-border overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <ImageUploadSection
-            uploadedImage={uploadedImage}
-            isDragOver={isDragOver}
-            isUploading={isUploading}
-            fileInputRef={fileInputRef}
-            handleFileInputChange={handleFileInputChange}
-            handleDrop={handleDrop}
-            handleDragOver={handleDragOver}
-            handleDragLeave={handleDragLeave}
-            handleRemoveImage={handleRemoveImage}
-          />
-          <OrderDetailsForm
-            customMessage={customMessage}
-            setCustomMessage={setCustomMessage}
-            contactInfo={contactInfo}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-            uploadedImage={uploadedImage}
-            isUploading={isUploading}
-          />
-        </div>
+        {/* Mensaje de éxito */}
+        {showSuccess && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-auto">
+              <div className="flex items-center justify-center h-12 w-12 bg-success-100 rounded-full mx-auto mb-4">
+                <Icon name="Check" size={24} className="text-success-600" />
+              </div>
+              <h2 className="text-lg font-semibold text-text-primary text-center mb-2">
+                ¡Solicitud Enviada!
+              </h2>
+              <p className="text-sm text-text-secondary text-center">
+                Gracias por tu solicitud. Te contactaremos pronto para más detalles.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
