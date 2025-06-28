@@ -1,10 +1,9 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
-import database from '../data/database.json';
 
 const ProductSection = ({ selectedCategory }) => {
-  const { allProducts } = useProducts();
+  const { allProducts, categories, occasions, loading, error } = useProducts();
 
   // Determinar productos a mostrar según la categoría seleccionada
   let filteredProducts = allProducts;
@@ -13,20 +12,27 @@ const ProductSection = ({ selectedCategory }) => {
 
   if (selectedCategory && selectedCategory !== 'todos') {
     // Buscar si es una categoría de flores
-    const category = database.categories.find(c => c.id === selectedCategory);
+    const category = categories.find(c => c.id === selectedCategory);
     if (category) {
       filteredProducts = allProducts.filter(product => product.category === selectedCategory);
       sectionTitle = category.name;
       sectionDescription = category.description;
     } else {
       // Buscar si es una ocasión válida
-      const occasion = database.occasions.find(o => o.id === selectedCategory);
+      const occasion = occasions.find(o => o.id === selectedCategory);
       if (occasion) {
-        filteredProducts = allProducts.filter(product => product.occasion.includes(selectedCategory));
+        filteredProducts = allProducts.filter(product => Array.isArray(product.occasion) && product.occasion.includes(selectedCategory));
         sectionTitle = `Para: ${occasion.name}`;
         sectionDescription = occasion.description;
       }
     }
+  }
+
+  if (loading) {
+    return <div className="text-center py-12">Cargando productos...</div>;
+  }
+  if (error) {
+    return <div className="text-center text-error py-12">{error}</div>;
   }
 
   return (

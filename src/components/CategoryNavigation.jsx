@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from './AppIcon';
-import database from '../data/database.json';
+import api from '../utils/axios';
 
 const CategoryNavigation = ({ selectedCategory, onCategoryChange }) => {
-  // Opción extra para mostrar todos
+  const [occasions, setOccasions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get('/api/occasions')
+      .then(res => {
+        setOccasions(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Error al cargar ocasiones');
+        setLoading(false);
+      });
+  }, []);
+
   const allOption = {
     id: 'todos',
     name: 'Todos',
@@ -12,13 +28,11 @@ const CategoryNavigation = ({ selectedCategory, onCategoryChange }) => {
     bgColor: 'bg-surface',
     message: null
   };
-  // Leer categorías y ocasiones desde la base de datos
-  const occasions = database.occasions || [];
-  // Unir categorías y ocasiones para navegación
   const categories = [allOption, ...occasions];
-
-  // Buscar la ocasión seleccionada para mostrar el mensaje
   const selectedOccasion = occasions.find(o => o.id === selectedCategory);
+
+  if (loading) return <div className="text-center py-8">Cargando ocasiones...</div>;
+  if (error) return <div className="text-center text-error py-8">{error}</div>;
 
   return (
     <div className="mt-8">
@@ -39,12 +53,12 @@ const CategoryNavigation = ({ selectedCategory, onCategoryChange }) => {
             onClick={() => onCategoryChange(category.id)}
             className={`flex items-center space-x-3 px-6 py-4 rounded-xl transition-all duration-250 ${
               selectedCategory === category.id
-                ? 'bg-accent text-white shadow-lg transform scale-105'
-                : `${category.bgColor} ${category.color} hover:shadow-md hover:scale-102`
+                ? 'bg-primary-100 text-primary'
+                : 'bg-surface text-text-primary'
             }`}
           >
-            <Icon name={category.icon} size={20} />
-            <span className="font-medium">{category.name}</span>
+            <Icon name={category.icon} className={`w-6 h-6 ${category.color}`} />
+            <span>{category.name}</span>
           </button>
         ))}
       </div>
@@ -86,4 +100,4 @@ const CategoryNavigation = ({ selectedCategory, onCategoryChange }) => {
   );
 };
 
-export default CategoryNavigation; 
+export default CategoryNavigation;

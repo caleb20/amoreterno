@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import database from '../data/database.json';
+import React, { useEffect, useState } from 'react';
+import api from '../utils/axios';
 import MapaEstacionesLinea1 from './MapaEstacionesLinea1';
 
 const ContactSection = () => {
@@ -9,8 +9,30 @@ const ContactSection = () => {
     terms: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [companyInfo, setCompanyInfo] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [features, setFeatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { companyInfo, paymentMethods, features } = database;
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      api.get('/api/company-info'),
+      api.get('/api/payment-methods'),
+      api.get('/api/features')
+    ])
+      .then(([companyRes, paymentRes, featuresRes]) => {
+        setCompanyInfo(companyRes.data);
+        setPaymentMethods(paymentRes.data);
+        setFeatures(featuresRes.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Error al cargar datos de contacto');
+        setLoading(false);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,6 +71,9 @@ const ContactSection = () => {
     setFormData({ email: '', name: '', terms: false });
     setIsSubmitting(false);
   };
+
+  if (loading) return <div className="text-center py-12">Cargando información de contacto...</div>;
+  if (error) return <div className="text-center text-error py-12">{error}</div>;
 
   return (
     <section id="contacto" className="pt-6 pb-16 bg-primary-50">
@@ -130,7 +155,7 @@ const ContactSection = () => {
             {/* CTA Buttons */}
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <a
-                href={`https://wa.me/${companyInfo.whatsapp.replace(/[^0-9]/g, '')}`}
+                href={companyInfo && companyInfo.whatsapp ? `https://wa.me/${companyInfo.whatsapp.replace(/[^0-9]/g, '')}` : '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary inline-flex items-center justify-center space-x-2"
@@ -141,7 +166,7 @@ const ContactSection = () => {
                 <span>Chatear Ahora</span>
               </a>
               <a
-                href={`tel:${companyInfo.phone.replace(/[^0-9]/g, '')}`}
+                href={companyInfo && companyInfo.phone ? `tel:${companyInfo.phone.replace(/[^0-9]/g, '')}` : '#'}
                 className="bg-surface text-accent border-2 border-accent px-6 py-3 rounded-lg font-poppins font-semibold hover:bg-accent hover:text-white transition-all duration-300 inline-flex items-center justify-center space-x-2"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

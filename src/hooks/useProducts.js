@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import database from '../data/database.json';
+import { useState, useMemo, useEffect } from 'react';
+import api from '../utils/axios';
 
 export const useProducts = () => {
   const [filters, setFilters] = useState({
@@ -9,46 +9,56 @@ export const useProducts = () => {
     onSale: false,
     featured: false
   });
-
   const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [occasions, setOccasions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const products = database.products;
-  const categories = database.categories;
-  const occasions = database.occasions;
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [productsRes, categoriesRes, occasionsRes] = await Promise.all([
+          api.get('/api/products'),
+          api.get('/api/categories'),
+          api.get('/api/occasions'),
+        ]);
+        setProducts(productsRes.data);
+        setCategories(categoriesRes.data);
+        setOccasions(occasionsRes.data);
+      } catch (err) {
+        setError(err.message || 'Error al cargar los datos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      // Search term filter
       if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
           !product.description.toLowerCase().includes(searchTerm.toLowerCase())) {
         return false;
       }
-
-      // Category filter
       if (filters.category && product.category !== filters.category) {
         return false;
       }
-
-      // Occasion filter
       if (filters.occasion && !product.occasion.includes(filters.occasion)) {
         return false;
       }
-
-      // Price range filter
       if (product.price < filters.priceRange.min || product.price > filters.priceRange.max) {
         return false;
       }
-
-      // On sale filter
-      if (filters.onSale && !product.originalPrice) {
+      if (filters.onSale && !product.original_price) {
         return false;
       }
-
-      // Featured filter
       if (filters.featured && !product.featured) {
         return false;
       }
-
       return true;
     });
   }, [products, filters, searchTerm]);
@@ -58,7 +68,7 @@ export const useProducts = () => {
   }, [products]);
 
   const saleProducts = useMemo(() => {
-    return products.filter(product => product.originalPrice && product.discount);
+    return products.filter(product => product.original_price && product.discount);
   }, [products]);
 
   const filterByCategory = (categoryId) => {
@@ -122,6 +132,8 @@ export const useProducts = () => {
     clearFilters,
     getProductById,
     getProductsByCategory,
-    getProductsByOccasion
+    getProductsByOccasion,
+    loading,
+    error
   };
 };

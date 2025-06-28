@@ -1,8 +1,23 @@
-import React from 'react';
-import database from '../data/database.json';
+import React, { useEffect, useState } from 'react';
+import api from '../utils/axios';
 
 const Footer = () => {
-  const { companyInfo } = database;
+  const [companyInfo, setCompanyInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get('/api/company-info')
+      .then(res => {
+        setCompanyInfo(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Error al cargar información de la empresa');
+        setLoading(false);
+      });
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -10,6 +25,10 @@ const Footer = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  if (loading) return <div className="text-center py-12">Cargando información...</div>;
+  if (error) return <div className="text-center text-error py-12">{error}</div>;
+  if (!companyInfo) return null;
 
   return (
     <footer className="bg-text-primary text-white py-12">
@@ -28,7 +47,7 @@ const Footer = () => {
               Creando momentos mágicos con flores frescas y entregas confiables en Lima y Callao desde 2019.
             </p>
             <div className="flex space-x-4">
-              {Object.entries(companyInfo.socialMedia).map(([platform, url]) => (
+              {companyInfo.socialMedia && Object.entries(companyInfo.socialMedia).map(([platform, url]) => (
                 <a
                   key={platform}
                   href={url}

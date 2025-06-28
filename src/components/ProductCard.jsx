@@ -78,9 +78,9 @@ const ProductCard = ({ product, showAddToCart = true, compact = false }) => {
         <div className="p-4">
           <h3 className="font-poppins font-semibold text-text-primary mb-2">{product.name}</h3>
           <div className="flex items-center space-x-2 mb-2">
-            {product.originalPrice && (
+            {product.original_price && (
               <span className="text-sm text-text-secondary line-through">
-                S/. {product.originalPrice.toFixed(2)}
+                S/. {product.original_price.toFixed(2)}
               </span>
             )}
             <span className="text-lg font-poppins font-bold text-accent">
@@ -109,17 +109,17 @@ const ProductCard = ({ product, showAddToCart = true, compact = false }) => {
         
         {/* Product Tags */}
         <div className="absolute top-4 left-4">
-          {product.tags.includes('popular') && (
+          {Array.isArray(product.tags) && product.tags.includes('popular') && (
             <span className="bg-accent text-white px-2 py-1 rounded-full text-sm font-medium">
               Más Popular
             </span>
           )}
-          {product.tags.includes('exclusivo') && (
+          {Array.isArray(product.tags) && product.tags.includes('exclusivo') && (
             <span className="bg-secondary text-white px-2 py-1 rounded-full text-sm font-medium">
               Exclusivo
             </span>
           )}
-          {product.tags.includes('combo') && (
+          {Array.isArray(product.tags) && product.tags.includes('combo') && (
             <span className="bg-primary text-white px-2 py-1 rounded-full text-sm font-medium">
               Combo
             </span>
@@ -147,9 +147,9 @@ const ProductCard = ({ product, showAddToCart = true, compact = false }) => {
         
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            {product.originalPrice && (
+            {product.original_price && (
               <span className="text-lg text-text-secondary line-through">
-                S/. {product.originalPrice.toFixed(2)}
+                S/. {product.original_price.toFixed(2)}
               </span>
             )}
             <span className="text-2xl font-poppins font-bold text-accent">

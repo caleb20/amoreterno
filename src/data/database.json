@@ -427,7 +427,7 @@
     },
     "paymentMethods": [
         {
-            "name": "Yape",
+            "name": "Yapo",
             "available": true,
             "color": "blue"
         },

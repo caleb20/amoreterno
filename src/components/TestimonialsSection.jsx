@@ -1,8 +1,25 @@
-import React from 'react';
-import database from '../data/database.json';
+import React, { useEffect, useState } from 'react';
+import api from '../utils/axios';
 
 const TestimonialsSection = () => {
-  const { testimonials, stats } = database;
+  const [testimonials, setTestimonials] = useState([]);
+  const [stats, setStats] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get('/api/testimonials')
+      .then(res => {
+        setTestimonials(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Error al cargar testimonios');
+        setLoading(false);
+      });
+    // Si hay stats en otro endpoint, agregar aquí
+  }, []);
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -15,6 +32,9 @@ const TestimonialsSection = () => {
       </svg>
     ));
   };
+
+  if (loading) return <div className="text-center py-12">Cargando testimonios...</div>;
+  if (error) return <div className="text-center text-error py-12">{error}</div>;
 
   return (
     <section className="pt-12 pb-6 bg-primary-50">
@@ -38,28 +58,26 @@ const TestimonialsSection = () => {
                   alt={`Cliente ${testimonial.name}`}
                   className="w-12 h-12 rounded-full object-cover mr-4"
                   onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                    e.target.onerror = null;
+                    e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(testimonial.name || 'Cliente');
                   }}
                 />
                 <div>
-                  <h4 className="font-semibold text-text-primary">{testimonial.name}</h4>
-                  <p className="text-sm text-text-secondary">{testimonial.location}</p>
+                  <div className="font-bold text-text-primary">{testimonial.name}</div>
+                  <div className="text-xs text-text-secondary">{testimonial.location}</div>
                 </div>
               </div>
               
-              <div className="flex mb-3">
+              <div className="flex items-center mb-2">
                 {renderStars(testimonial.rating)}
+                <span className="ml-2 text-xs text-text-secondary">{testimonial.days_ago} días atrás</span>
               </div>
               
-              <p className="text-text-secondary italic mb-4">"{testimonial.comment}"</p>
-              
-              <div className="text-xs text-success">
-                ✓ Entregado en {testimonial.deliveryLocation} - Hace {testimonial.daysAgo} {testimonial.daysAgo === 1 ? 'día' : 'días'}
-              </div>
+              <p className="text-text-secondary mb-2">{testimonial.comment}</p>
+              <div className="text-xs text-accent">{testimonial.deliveryLocation}</div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

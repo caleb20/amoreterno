@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCountdown } from '../hooks/useCountdown';
-import database from '../data/database.json';
+import api from '../utils/axios';
 
 const UrgentDeliverySection = () => {
   const { countdown, formatTime, isExpired } = useCountdown(17, 0); // 5:00 PM cutoff
+  const [deliveryZones, setDeliveryZones] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get('/api/delivery-zones')
+      .then(res => {
+        setDeliveryZones(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Error al cargar zonas de entrega');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="text-center py-12">Cargando zonas de entrega...</div>;
+  if (error) return <div className="text-center text-error py-12">{error}</div>;
 
   return (
     <section className="py-16 bg-gradient-to-r from-primary-50 to-secondary-50">
@@ -31,7 +50,7 @@ const UrgentDeliverySection = () => {
               </div>
             </div>
             <div className="space-y-3">
-              {database.deliveryZones.map(zone => (
+              {deliveryZones.map(zone => (
                 <div key={zone.name} className="flex items-center space-x-3">
                   <div className={`w-3 h-3 rounded-full ${
                     zone.status === 'available' ? 'bg-success' : 'bg-warning'
@@ -58,7 +77,7 @@ const UrgentDeliverySection = () => {
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="grid grid-cols-2 gap-4 text-center">
-                    {database.deliveryZones.map(zone => (
+                    {deliveryZones.map(zone => (
                       <div
                         key={zone.name}
                         className={`${
@@ -87,4 +106,4 @@ const UrgentDeliverySection = () => {
   );
 };
 
-export default UrgentDeliverySection; 
+export default UrgentDeliverySection;

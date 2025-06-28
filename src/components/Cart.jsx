@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import database from '../data/database.json';
+import api from '../utils/axios';
 
 const Cart = () => {
 
@@ -18,10 +18,13 @@ const Cart = () => {
   // Usar la estación seleccionada global del contexto
   const { selectedStation, setSelectedStation } = useCart();
   const [isProvince, setIsProvince] = useState(false);
+  const [companyInfo, setCompanyInfo] = useState(null);
 
-  // Eliminada la lista de estaciones para evitar invasividad en el carrito
-
-  const companyInfo = database.companyInfo;
+  useEffect(() => {
+    api.get('/api/company-info')
+      .then(res => setCompanyInfo(res.data))
+      .catch(() => setCompanyInfo(null));
+  }, []);
 
   if (!isOpen) return null;
 
