@@ -7,7 +7,7 @@ interface ProductSectionProps {
 }
 
 const ProductSection: React.FC<ProductSectionProps> = ({ selectedCategory }) => {
-  const { allProducts, categories = [], occasions = [], loading, error } = useProducts();
+  const { allProducts, categories = [], loading, error } = useProducts();
   const [visibleProducts, setVisibleProducts] = useState(6); // Inicialmente mostrar 6 productos
 
   // Resetear la cantidad de productos visibles cuando cambie la categoría
@@ -27,15 +27,8 @@ const ProductSection: React.FC<ProductSectionProps> = ({ selectedCategory }) => 
       filteredProducts = allProducts.filter(product => product.category === category.name);
       sectionTitle = category.name;
       sectionDescription = category.description || '';
-    } else {
-      // Buscar si es una ocasión válida
-      const occasion = occasions.find(o => o.id.toString() === selectedCategory || o.name === selectedCategory);
-      if (occasion) {
-        filteredProducts = allProducts.filter(product => Array.isArray(product.occasion) && product.occasion.includes(selectedCategory));
-        sectionTitle = `Para: ${occasion.name}`;
-        sectionDescription = occasion.description || '';
-      }
     }
+    // Si no es una categoría, simplemente no filtrar por ocasión
   }
 
   // Obtener productos para mostrar con paginación
