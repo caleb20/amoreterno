@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/axios';
 
-const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [dynamicSubtitle, setDynamicSubtitle] = useState('');
-  const [slides, setSlides] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+interface HeroSlide {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  cta_text: string;
+  cta_link: string;
+}
+
+const HeroCarousel: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [dynamicSubtitle, setDynamicSubtitle] = useState<string>('');
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -51,7 +61,7 @@ const HeroCarousel = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
@@ -95,7 +105,8 @@ const HeroCarousel = () => {
               alt={slide.title}
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
               }}
             />
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>

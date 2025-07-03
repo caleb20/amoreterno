@@ -1,8 +1,32 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Icon from './AppIcon';
 
+declare global {
+  interface Window {
+    emailjs?: any;
+  }
+}
+
+interface UploadedImage {
+  file: File;
+  preview: string;
+  name: string;
+}
+
+interface ImageUploadSectionProps {
+  uploadedImage: UploadedImage | null;
+  isDragOver: boolean;
+  isUploading: boolean;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  handleFileInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleRemoveImage: () => void;
+}
+
 // Subcomponente: Sección de subida de imagen
-const ImageUploadSection = ({ uploadedImage, isDragOver, isUploading, fileInputRef, handleFileInputChange, handleDrop, handleDragOver, handleDragLeave, handleRemoveImage }) => (
+const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({ uploadedImage, isDragOver, isUploading, fileInputRef, handleFileInputChange, handleDrop, handleDragOver, handleDragLeave, handleRemoveImage }) => (
   <div className="p-8 bg-surface">
     <h3 className="text-xl font-semibold text-text-primary mb-6">
       Sube tu Imagen de Referencia
@@ -75,8 +99,18 @@ const ImageUploadSection = ({ uploadedImage, isDragOver, isUploading, fileInputR
   </div>
 );
 
+interface OrderDetailsFormProps {
+  customMessage: string;
+  setCustomMessage: (msg: string) => void;
+  contactInfo: { name: string; phone: string; email: string };
+  handleInputChange: (field: string, value: string) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  uploadedImage: UploadedImage | null;
+  isUploading: boolean;
+}
+
 // Subcomponente: Formulario de detalles del pedido
-const OrderDetailsForm = ({ customMessage, setCustomMessage, contactInfo, handleInputChange, handleSubmit, uploadedImage, isUploading }) => (
+const OrderDetailsForm: React.FC<OrderDetailsFormProps> = ({ customMessage, setCustomMessage, contactInfo, handleInputChange, handleSubmit, uploadedImage, isUploading }) => (
   <div className="p-8">
     <h3 className="text-xl font-semibold text-text-primary mb-6">
       Detalles del Pedido
@@ -167,18 +201,18 @@ const OrderDetailsForm = ({ customMessage, setCustomMessage, contactInfo, handle
 );
 
 // Componente principal
-const CustomOrderUpload = () => {
+const CustomOrderUpload: React.FC = () => {
   // State y refs
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [customMessage, setCustomMessage] = useState('');
-  const [contactInfo, setContactInfo] = useState({ name: '', phone: '', email: '' });
-  const [showSuccess, setShowSuccess] = useState(false);
-  const fileInputRef = useRef(null);
+  const [uploadedImage, setUploadedImage] = useState<UploadedImage | null>(null);
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [customMessage, setCustomMessage] = useState<string>('');
+  const [contactInfo, setContactInfo] = useState<{ name: string; phone: string; email: string }>({ name: '', phone: '', email: '' });
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Handlers con useCallback para evitar renders innecesarios
-  const handleFileSelect = useCallback((file) => {
+  const handleFileSelect = useCallback((file: File) => {
     if (!file) return;
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!validTypes.includes(file.type)) {
@@ -193,13 +227,14 @@ const CustomOrderUpload = () => {
     setIsUploading(true);
     const reader = new FileReader();
     reader.onload = (e) => {
-      setUploadedImage({ file, preview: e.target.result, name: file.name });
+      const result = e.target && typeof e.target.result === 'string' ? e.target.result : '';
+      setUploadedImage({ file, preview: result, name: file.name });
       setIsUploading(false);
     };
     reader.readAsDataURL(file);
   }, []);
 
-  const handleDrop = useCallback((e) => {
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
     const files = Array.from(e.dataTransfer.files);
@@ -208,18 +243,18 @@ const CustomOrderUpload = () => {
     }
   }, [handleFileSelect]);
 
-  const handleDragOver = useCallback((e) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(true);
   }, []);
 
-  const handleDragLeave = useCallback((e) => {
+  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
   }, []);
 
-  const handleFileInputChange = useCallback((e) => {
-    const file = e.target.files[0];
+  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
     if (file) {
       handleFileSelect(file);
     }
@@ -232,12 +267,12 @@ const CustomOrderUpload = () => {
     }
   }, []);
 
-  const handleInputChange = useCallback((field, value) => {
+  const handleInputChange = useCallback((field: string, value: string) => {
     setContactInfo(prev => ({ ...prev, [field]: value }));
   }, []);
 
   // Cambia la función handleSubmit para enviar los datos al backend seguro
-  const handleSubmit = useCallback(async (e) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!uploadedImage) {
       alert('Por favor, sube una imagen de referencia');
