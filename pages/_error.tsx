@@ -1,4 +1,10 @@
-function Error({ statusCode }) {
+import { NextPageContext } from 'next';
+
+interface ErrorProps {
+  statusCode?: number;
+}
+
+function Error({ statusCode }: ErrorProps) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <h1 style={{ fontSize: 48, marginBottom: 16 }}>¡Ups! Algo salió mal.</h1>
@@ -10,9 +16,9 @@ function Error({ statusCode }) {
   );
 }
 
-Error.getInitialProps = ({ res, err }) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+Error.getInitialProps = ({ res, err }: NextPageContext) => {
+  const statusCode = res ? res.statusCode : err ? (err as any).statusCode : 404;
   return { statusCode };
 };
 
-export default Error; 
+export default Error;
