@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import api from '../utils/axios';
 import type { CartItem } from '../types';
 
-interface PaymentMethod {
-  id: string;
-  name: string;
-  image?: string;
-}
+const paymentMethods = [
+  { key: 'yape', label: 'Yape', icon: '/yape-logo.png' },
+  { key: 'plin', label: 'Plin', icon: '/plin-logo.png' },
+  { key: 'transfer', label: 'Transferencia', icon: null },
+  { key: 'cash', label: 'Contraentrega', icon: null }
+];
 
 const Cart: React.FC = () => {
   // Hooks siempre al inicio
@@ -34,26 +35,48 @@ const Cart: React.FC = () => {
     orderNote: ''
   });
   const [deliveryZones, setDeliveryZones] = useState<any[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [bankAccounts, setBankAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [companyInfo, setCompanyInfo] = useState<any>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      // Cargar datos cuando se abre el carrito
-      Promise.all([
-        api.get('/api/delivery-zones'),
-        api.get('/api/payment-methods'),
-        api.get('/api/bank-accounts')
-      ]).then(([zonesRes, paymentRes, accountsRes]) => {
-        setDeliveryZones(zonesRes.data || []);
-        setPaymentMethods(paymentRes.data || []);
-        setBankAccounts(accountsRes.data || []);
-      }).catch(error => {
-        console.error('Error loading cart data:', error);
-      });
+      api.get('/api/bank-accounts')
+        .then(res => {
+          setBankAccounts(res.data || []);
+          console.log('Bank accounts cargadas:', res.data);
+        })
+        .catch(error => {
+          console.error('Error loading bank accounts:', error);
+        });
+      api.get('/api/company-info')
+        .then(res => setCompanyInfo(res.data))
+        .catch(() => setCompanyInfo(null));
     }
   }, [isOpen]);
+
+  // Cerrar con Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeCart();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, closeCart]);
+
+  // Cerrar al hacer clic fuera
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+        closeCart();
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isOpen, closeCart]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -107,11 +130,43 @@ const Cart: React.FC = () => {
     }
   };
 
+  // Calcular costo de envío
+  const shipping = isProvince ? 25 : (selectedStation ? 10 : 0);
+  const totalWithShipping = totalPrice + shipping;
+
+  const handleWhatsAppOrder = () => {
+    const cartItems = cart.map((item: CartItem) =>
+      `${item.product.name} (x${item.quantity}) - S/. ${(item.product.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+    let deliveryMsg = '';
+    if (isProvince) {
+      deliveryMsg = '\n\nEntrega: Provincia (coordinar punto exacto)\nEnvío: S/. 25.00';
+    } else if (selectedStation) {
+      deliveryMsg = `\n\nEntrega: Estación Línea 1 - ${selectedStation}\nEnvío: S/. 10.00`;
+    } else {
+      deliveryMsg = '\n\nEntrega: Línea 1 (por coordinar)\nEnvío: S/. 10.00';
+    }
+    const message = `¡Hola! Me gustaría hacer el siguiente pedido:\n\n${cartItems}${deliveryMsg}\n\nTotal: S/. ${totalWithShipping.toFixed(2)}\n\nTiempo estimado de entrega: ${estimatedDeliveryTime}`;
+    if (companyInfo && companyInfo.whatsapp) {
+      const whatsappUrl = `https://wa.me/${companyInfo.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    } else {
+      alert('No se pudo obtener el número de WhatsApp de la empresa.');
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex justify-end">
+      {/* Overlay con fade */}
+      <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity duration-300 animate-fade-in" />
+      {/* Sidebar a la derecha con slide y sombra */}
+      <div
+        ref={sidebarRef}
+        className="relative bg-white h-full w-full max-w-md shadow-2xl overflow-y-auto transform transition-transform duration-300 animate-slide-in-right"
+        style={{ minWidth: 340 }}
+      >
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -191,90 +246,151 @@ const Cart: React.FC = () => {
                 )}
               </div>
 
-              {/* Formulario de datos */}
-              <div className="space-y-4 mb-6">
-                <h3 className="text-lg font-semibold">Datos de entrega</h3>
-                
-                <input
-                  type="text"
-                  name="customerName"
-                  placeholder="Nombre completo"
-                  value={formData.customerName}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                />
-                
-                <input
-                  type="tel"
-                  name="customerPhone"
-                  placeholder="Teléfono"
-                  value={formData.customerPhone}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border rounded-lg"
-                  required
-                />
-                
-                <input
-                  type="email"
-                  name="customerEmail"
-                  placeholder="Email (opcional)"
-                  value={formData.customerEmail}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border rounded-lg"
-                />
-                
-                <textarea
-                  name="deliveryAddress"
-                  placeholder="Dirección de entrega"
-                  value={formData.deliveryAddress}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border rounded-lg h-20"
-                  required
-                />
-
-                {/* Selección de estación */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium">Estación de Metro más cercana (opcional)</label>
-                  <button
-                    type="button"
-                    onClick={handleStationSelect}
-                    className="w-full p-3 border rounded-lg text-left bg-gray-50 hover:bg-gray-100 transition-colors"
-                  >
-                    {selectedStation || 'Seleccionar estación'}
-                  </button>
-                </div>
-              </div>
-
               {/* Método de pago */}
               <div className="space-y-4 mb-6">
                 <h3 className="text-lg font-semibold">Método de pago</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {paymentMethods.map((method) => (
                     <button
-                      key={method.id}
+                      key={method.key}
                       type="button"
-                      onClick={() => setSelectedPayment(method.id)}
+                      onClick={() => setSelectedPayment(method.key)}
                       className={`p-3 border rounded-lg flex items-center justify-center space-x-2 transition-colors ${
-                        selectedPayment === method.id
+                        selectedPayment === method.key
                           ? 'border-accent bg-accent-light'
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
                     >
-                      {method.image && (
-                        <img src={method.image} alt={method.name} className="w-8 h-8" />
+                      {method.icon && (
+                        <img src={method.icon} alt={method.label} className="w-8 h-8" />
                       )}
-                      <span>{method.name}</span>
+                      <span>{method.label}</span>
                     </button>
                   ))}
+                </div>
+                {/* Detalle del método seleccionado */}
+                <div className="mt-2">
+                  {selectedPayment === 'yape' && (
+                    <div className="flex flex-col items-center p-3 border rounded-lg">
+                      <img src="/qr/yape.png" alt="QR Yape" className="h-24 w-24 object-contain rounded" />
+                    </div>
+                  )}
+                  {selectedPayment === 'plin' && (
+                    <div className="flex flex-col items-center p-3 border rounded-lg">
+                      <img src="/qr/plin.png" alt="QR Plin" className="h-24 w-24 object-contain rounded" />
+                    </div>
+                  )}
+                  {selectedPayment === 'transfer' && (
+                    <div>
+                      <h4 className="font-semibold text-text-primary mb-1">Transferencia Bancaria</h4>
+                      {bankAccounts && bankAccounts.length > 0 ? (
+                        <ul className="space-y-2 text-xs">
+                          {bankAccounts.map((acc: any, idx: number) => (
+                            <li key={idx} className="border rounded p-2">
+                              <span className="font-bold">{acc.bank}:</span> {acc.account_number}<br />
+                              <span className="font-bold">CCI:</span> {acc.cci}<br />
+                              <span className="font-bold">Titular:</span> {acc.holder}<br />
+                              <span className="font-bold">Tipo:</span> {acc.type}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-xs text-gray-500">Solicita los datos para transferencia al finalizar tu pedido.</p>
+                      )}
+                    </div>
+                  )}
+                  {selectedPayment === 'cash' && (
+                    <div>
+                      <h4 className="font-semibold text-text-primary mb-1">Pago Contraentrega</h4>
+                      <p className="text-xs text-gray-500">Puedes pagar en efectivo o con Yape/Plin al recibir tu pedido.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Selección de punto de entrega */}
+              <div className="mb-6">
+                <div className="text-sm text-gray-600 mb-1">
+                  <span className="font-semibold text-accent">Lugar de entrega:</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded border text-xs font-semibold transition-all duration-200 text-center ${!isProvince && selectedStation !== 'OTROS' ? 'bg-accent text-white border-accent' : 'bg-surface text-text-secondary border-gray-300 hover:bg-accent hover:text-white hover:border-accent'}`}
+                    onClick={() => {
+                      setIsProvince(false);
+                      setSelectedStation(selectedStation === 'OTROS' ? '' : selectedStation);
+                      if (selectedStation && selectedStation !== 'OTROS') {
+                        const notification = document.createElement('div');
+                        notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                        notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${selectedStation}</b></span>\n      </div>\n    `;
+                        document.body.appendChild(notification);
+                        setTimeout(() => {
+                          document.body.removeChild(notification);
+                        }, 3500);
+                      }
+                      closeCart();
+                      setTimeout(() => {
+                        const estaciones = document.getElementById('estaciones');
+                        if (estaciones) {
+                          estaciones.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                          window.dispatchEvent(new CustomEvent('scrollToEstaciones'));
+                        }
+                      }, 600); // delay mayor para asegurar que el Cart ya no esté visible
+                    }}
+                  >
+                    {selectedStation && selectedStation !== 'OTROS' ? `Estación: ${selectedStation}` : 'Estación Línea 1'}
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded border text-xs font-semibold transition-all duration-200 text-center ${selectedStation === 'OTROS' ? 'bg-accent text-white border-accent' : 'bg-surface text-text-secondary border-gray-300 hover:bg-accent hover:text-white hover:border-accent'}`}
+                    onClick={() => {
+                      setIsProvince(false);
+                      setSelectedStation('OTROS');
+                      const notification = document.createElement('div');
+                      notification.className = 'fixed top-20 right-4 bg-warning text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Otros (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
+                      document.body.appendChild(notification);
+                      setTimeout(() => {
+                        document.body.removeChild(notification);
+                      }, 3500);
+                    }}
+                  >
+                    Otros Lima
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded border text-xs font-semibold transition-all duration-200 text-center ${isProvince ? 'bg-accent text-white border-accent' : 'bg-surface text-text-secondary border-gray-300 hover:bg-accent hover:text-white hover:border-accent'}`}
+                    onClick={() => {
+                      setIsProvince(true);
+                      setSelectedStation('');
+                      const notification = document.createElement('div');
+                      notification.className = 'fixed top-20 right-4 bg-warning text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Provincia (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
+                      document.body.appendChild(notification);
+                      setTimeout(() => {
+                        document.body.removeChild(notification);
+                      }, 3500);
+                    }}
+                  >
+                    Provincia
+                  </button>
+                </div>
+                <div className="mt-2 text-xs text-gray-600">
+                  {isProvince
+                    ? 'Envío: S/ 25 (coordinar por WhatsApp)'
+                    : selectedStation
+                      ? `Envío: S/ 10 a estación Línea 1 (${selectedStation})`
+                      : 'Envío: S/ 10 a estación Línea 1 (por coordinar)'}
                 </div>
               </div>
 
               {/* Botón de enviar pedido */}
               <button
-                onClick={handleSubmitOrder}
-                disabled={loading || !formData.customerName || !formData.customerPhone || !formData.deliveryAddress}
-                className="w-full bg-accent text-white py-3 rounded-lg font-semibold hover:bg-accent-dark transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                onClick={handleWhatsAppOrder}
+                disabled={loading || cart.length === 0}
+                className="w-full bg-success text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 {loading ? 'Enviando...' : 'Enviar Pedido'}
               </button>
@@ -282,6 +398,22 @@ const Cart: React.FC = () => {
           )}
         </div>
       </div>
+      <style jsx global>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease;
+        }
+        @keyframes slide-in-right {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slide-in-right {
+          animation: slide-in-right 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+      `}</style>
     </div>
   );
 };

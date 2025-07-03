@@ -88,7 +88,7 @@ gtag('config', 'G-XXXXXXXXXX');`
           <CustomOrderUpload />
         </section>
         <section className="bg-white/90 py-12">
-          <div className="rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] px-0 py-4 md:px-6 md:py-6 mt-0 mb-0 w-full max-w-7xl mx-auto">
+          <div id="mapa-estaciones" className="rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] px-0 py-4 md:px-6 md:py-6 mt-0 mb-0 w-full max-w-7xl mx-auto">
             <MapaEstacionesLinea1 />
           </div>
         </section>

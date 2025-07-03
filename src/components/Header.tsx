@@ -144,7 +144,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToOcasiones }) => {
   // Escuchar evento global para scroll a estaciones desde el carrito
   useEffect(() => {
     const handler = () => {
-      scrollToSection('contacto'); // id de la sección donde está el mapa de estaciones
+      scrollToSection('mapa-estaciones'); // id de la sección donde está el mapa de estaciones
     };
     window.addEventListener('scrollToEstaciones', handler);
     return () => window.removeEventListener('scrollToEstaciones', handler);
