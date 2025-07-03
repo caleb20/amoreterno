@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/axios';
 
+export interface Station {
+  nombre: string;
+  lat: string;
+  lng: string;
+  // Agrega aquí otras propiedades si las necesitas
+}
+
 export default function useStations() {
-  const [stations, setStations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [stations, setStations] = useState<Station[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);

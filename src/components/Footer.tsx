@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import api from '../utils/axios';
 
 const Footer = () => {
-  const [companyInfo, setCompanyInfo] = useState(null);
+  const [companyInfo, setCompanyInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +20,7 @@ const Footer = () => {
       });
   }, []);
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -51,7 +51,7 @@ const Footer = () => {
               {companyInfo.socialMedia && Object.entries(companyInfo.socialMedia).map(([platform, url]) => (
                 <a
                   key={platform}
-                  href={url}
+                  href={typeof url === 'string' ? url : undefined}
                   className="text-gray-300 hover:text-primary transition-colors duration-300"
                   target="_blank"
                   rel="noopener noreferrer"

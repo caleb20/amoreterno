@@ -3,10 +3,18 @@ import { useCart } from '../context/CartContext';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import useStations from '../hooks/useStations';
 
+// Definir el tipo de estación localmente para reflejar la estructura real
+interface StationMap {
+  nombre: string;
+  lat: string;
+  lng: string;
+}
+
 const MapaEstacionesLinea1 = () => {
   const { selectedStation, setSelectedStation } = useCart();
-  const { stations: estaciones, loading: loadingStations, error: errorStations } = useStations();
-  const [selected, setSelected] = useState(null);
+  // Tipar estaciones y selected correctamente
+  const { stations: estaciones, loading: loadingStations, error: errorStations } = useStations() as { stations: StationMap[]; loading: boolean; error: string | null };
+  const [selected, setSelected] = useState<StationMap | null>(null);
 
   const containerStyle = {
     width: '100vw',
@@ -68,7 +76,7 @@ const MapaEstacionesLinea1 = () => {
               title={selected.nombre}
               icon={{
                 url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                scaledSize: { width: 40, height: 40 }
+                scaledSize: typeof window !== 'undefined' && window.google && window.google.maps ? new window.google.maps.Size(40, 40) : undefined
               }}
             />
           )}
@@ -83,7 +91,7 @@ const MapaEstacionesLinea1 = () => {
             value={selected ? selected.nombre : ''}
             onChange={e => {
               const est = estaciones.find(est => est.nombre === e.target.value);
-              setSelected(est);
+              setSelected(est || null);
               setSelectedStation(est ? est.nombre : '');
               if (est) {
                 const notification = document.createElement('div');

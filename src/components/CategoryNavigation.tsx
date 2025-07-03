@@ -144,7 +144,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({ selectedCategor
                   : 'bg-white shadow-md group-hover:shadow-lg'
               }`}>
                 <Icon 
-                  name={category.icon} 
+                  name={category.icon as keyof typeof import('lucide-react')}
                   className={`w-6 h-6 ${
                     selectedCategory === category.id
                       ? 'text-white'

@@ -1,7 +1,34 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, Dispatch } from 'react';
+import { NotificationType } from '../components/Notification';
+
+// Estado y acciones tipados
+interface AppState {
+  theme: 'light' | 'dark';
+  language: string;
+  user: any;
+  notifications: NotificationType[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface AppActions {
+  setTheme: (theme: 'light' | 'dark') => void;
+  setLanguage: (language: string) => void;
+  setUser: (user: any) => void;
+  addNotification: (notification: Omit<NotificationType, 'id'>) => void;
+  removeNotification: (id: number) => void;
+  setLoading: (isLoading: boolean) => void;
+  setError: (error: string) => void;
+  clearError: () => void;
+}
+
+export interface AppContextType {
+  state: AppState;
+  actions: AppActions;
+}
 
 // Initial state
-const initialState = {
+const initialState: AppState = {
   theme: 'light',
   language: 'es',
   user: null,
@@ -22,8 +49,14 @@ const ActionTypes = {
   CLEAR_ERROR: 'CLEAR_ERROR'
 };
 
+// Tipos para las acciones del reducer
+interface AppAction {
+  type: string;
+  payload?: any;
+}
+
 // Reducer function
-const appReducer = (state, action) => {
+const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
     case ActionTypes.SET_THEME:
       return {
@@ -49,7 +82,7 @@ const appReducer = (state, action) => {
       return {
         ...state,
         notifications: state.notifications.filter(
-          notification => notification.id !== action.payload
+          (notification: NotificationType) => notification.id !== action.payload
         )
       };
     case ActionTypes.SET_LOADING:
@@ -73,14 +106,14 @@ const appReducer = (state, action) => {
 };
 
 // Create context
-const AppContext = createContext();
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
 // Provider component
-export const AppProvider = ({ children }) => {
+export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   // Actions
-  const actions = {
+  const actions: AppActions = {
     setTheme: (theme) => {
       dispatch({ type: ActionTypes.SET_THEME, payload: theme });
       localStorage.setItem('theme', theme);
@@ -98,8 +131,6 @@ export const AppProvider = ({ children }) => {
         type: ActionTypes.ADD_NOTIFICATION, 
         payload: { ...notification, id } 
       });
-      
-      // Auto-remove notification after 5 seconds
       setTimeout(() => {
         actions.removeNotification(id);
       }, 5000);
@@ -118,7 +149,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const value = {
+  const value: AppContextType = {
     state,
     actions
   };
@@ -131,10 +162,10 @@ export const AppProvider = ({ children }) => {
 };
 
 // Custom hook to use the context
-export const useApp = () => {
+export const useApp = (): AppContextType => {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error('useApp must be used within an AppProvider');
   }
   return context;
-}; 
+};

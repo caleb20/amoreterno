@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/axios';
 
+// Definir el tipo de Testimonial
+interface Testimonial {
+  id: number;
+  avatar: string;
+  name: string;
+  location: string;
+  rating: number;
+  days_ago: number;
+  comment: string;
+  deliveryLocation: string;
+}
+
 const TestimonialsSection = () => {
-  const [testimonials, setTestimonials] = useState([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -21,7 +33,7 @@ const TestimonialsSection = () => {
     // Si hay stats en otro endpoint, agregar aquí
   }, []);
 
-  const renderStars = (rating) => {
+  const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <svg
         key={i}
@@ -57,9 +69,9 @@ const TestimonialsSection = () => {
                   src={testimonial.avatar}
                   alt={`Cliente ${testimonial.name}`}
                   className="w-12 h-12 rounded-full object-cover mr-4"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(testimonial.name || 'Cliente');
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(testimonial.name || 'Cliente');
                   }}
                 />
                 <div>

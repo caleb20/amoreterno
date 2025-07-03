@@ -1,10 +1,18 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 
-const Notification = ({ notification }) => {
+// Tipado explícito para la notificación
+export interface NotificationType {
+  id: number;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title?: string;
+  message: string;
+}
+
+const Notification = ({ notification }: { notification: NotificationType }) => {
   const { actions } = useApp();
 
-  const getIcon = (type) => {
+  const getIcon = (type: NotificationType['type']) => {
     switch (type) {
       case 'success':
         return (
@@ -35,7 +43,7 @@ const Notification = ({ notification }) => {
     }
   };
 
-  const getTypeClasses = (type) => {
+  const getTypeClasses = (type: NotificationType['type']) => {
     switch (type) {
       case 'success':
         return 'bg-success text-white';
@@ -89,4 +97,4 @@ const NotificationContainer = () => {
   );
 };
 
-export default NotificationContainer; 
+export default NotificationContainer;

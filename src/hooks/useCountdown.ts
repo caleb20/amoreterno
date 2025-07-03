@@ -14,7 +14,7 @@ export const useCountdown = (targetHour = 17, targetMinute = 0) => {
         cutoffTime.setDate(cutoffTime.getDate() + 1);
       }
       
-      const timeDiff = cutoffTime - now;
+      const timeDiff = cutoffTime.getTime() - now.getTime();
       
       if (timeDiff > 0) {
         const hours = Math.floor(timeDiff / (1000 * 60 * 60));
@@ -36,11 +36,11 @@ export const useCountdown = (targetHour = 17, targetMinute = 0) => {
     return () => clearInterval(interval);
   }, [targetHour, targetMinute]);
 
-  const formatTime = (time) => time.toString().padStart(2, '0');
+  const formatTime = (time: number) => time.toString().padStart(2, '0');
 
   return {
     countdown,
     formatTime,
     isExpired: countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0
   };
-}; 
+};

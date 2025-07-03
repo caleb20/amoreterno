@@ -1,17 +1,25 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 
-const Loading = ({ size = 'md', text = 'Cargando...' }) => {
+interface LoadingProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  text?: string;
+}
+
+const Loading = ({ size = 'md', text = 'Cargando...' }: LoadingProps) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-8 h-8',
     lg: 'w-12 h-12',
     xl: 'w-16 h-16'
-  };
+  } as const;
+
+  type SizeKey = keyof typeof sizeClasses;
+  const safeSize: SizeKey = (['sm', 'md', 'lg', 'xl'].includes(size) ? size : 'md') as SizeKey;
 
   return (
     <div className="flex flex-col items-center justify-center space-y-3">
-      <div className={`${sizeClasses[size]} animate-spin rounded-full border-4 border-primary-200 border-t-primary`}></div>
+      <div className={`${sizeClasses[safeSize]} animate-spin rounded-full border-4 border-primary-200 border-t-primary`}></div>
       {text && (
         <p className="text-text-secondary text-sm">{text}</p>
       )}
@@ -19,8 +27,13 @@ const Loading = ({ size = 'md', text = 'Cargando...' }) => {
   );
 };
 
-const LoadingOverlay = ({ isVisible, text = 'Cargando...' }) => {
-  const { state } = useApp();
+interface LoadingOverlayProps {
+  isVisible: boolean;
+  text?: string;
+}
+
+const LoadingOverlay = ({ isVisible, text = 'Cargando...' }: LoadingOverlayProps) => {
+  const { state } = useApp() as { state: { isLoading: boolean } };
 
   if (!isVisible && !state.isLoading) {
     return null;
@@ -42,4 +55,4 @@ const LoadingSpinner = ({ className = '' }) => {
 };
 
 export { Loading, LoadingOverlay, LoadingSpinner };
-export default Loading; 
+export default Loading;

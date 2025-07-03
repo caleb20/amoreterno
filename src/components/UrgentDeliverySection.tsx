@@ -2,11 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useCountdown } from '../hooks/useCountdown';
 import api from '../utils/axios';
 
+// Definir el tipo de zona de entrega
+interface DeliveryZone {
+  name: string;
+  status: 'available' | 'last-minute' | string;
+  cutoffTime: string;
+}
+
 const UrgentDeliverySection = () => {
   const { countdown, formatTime, isExpired } = useCountdown(17, 0); // 5:00 PM cutoff
-  const [deliveryZones, setDeliveryZones] = useState([]);
+  const [deliveryZones, setDeliveryZones] = useState<DeliveryZone[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -71,8 +78,8 @@ const UrgentDeliverySection = () => {
                   src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2874&auto=format&fit=crop"
                   alt="Mapa de Lima con zonas de entrega"
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
                   }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
