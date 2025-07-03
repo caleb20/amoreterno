@@ -2,6 +2,15 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import api from '../utils/axios';
 
+/**
+ * @typedef {Object} CompanyInfo
+ * @property {string} [whatsapp] - Número de WhatsApp
+ * @property {string} [email] - Email de la empresa
+ * @property {string} [phone] - Teléfono de la empresa
+ * @property {string} [address] - Dirección de la empresa
+ * @property {string} [name] - Nombre de la empresa
+ */
+
 // Subcomponente: Barra de confianza
 // TrustBar sin stats (solo branding o vacío)
 const TrustBar = () => (
@@ -12,17 +21,32 @@ const TrustBar = () => (
   </div>
 );
 
-// Subcomponente: Navegación de escritorio
+/**
+ * @param {Object} props
+ * @param {function(string): void} props.scrollToSection
+ */
 const DesktopNav = ({ scrollToSection }) => (
-  <div className="hidden md:flex items-center space-x-8">
-    <button onClick={() => scrollToSection('productos')} className="text-text-secondary hover:text-accent transition-colors duration-150">Productos</button>
-    <button onClick={() => scrollToSection('ocasiones')} className="text-text-secondary hover:text-accent transition-colors duration-150">Ocasiones</button>
-    <button onClick={() => scrollToSection('ofertas')} className="text-text-secondary hover:text-accent transition-colors duration-150">Ofertas</button>
-    <button onClick={() => scrollToSection('contacto')} className="text-text-secondary hover:text-accent transition-colors duration-150">Contacto</button>
+  <div className="hidden md:flex items-center space-x-12 text-lg md:text-xl font-semibold">
+    <button onClick={() => scrollToSection('productos')} className="text-text-secondary hover:text-accent transition-colors duration-150 px-2 py-1">
+      Productos
+    </button>
+    <button onClick={() => scrollToSection('ocasiones')} className="text-text-secondary hover:text-accent transition-colors duration-150 px-2 py-1">
+      Ocasiones
+    </button>
+    <button onClick={() => scrollToSection('ofertas')} className="text-text-secondary hover:text-accent transition-colors duration-150 px-2 py-1">
+      Ofertas
+    </button>
+    <button onClick={() => scrollToSection('contacto')} className="text-text-secondary hover:text-accent transition-colors duration-150 px-2 py-1">
+      Contacto
+    </button>
   </div>
 );
 
-// Subcomponente: Botón de carrito
+/**
+ * @param {Object} props
+ * @param {number} props.itemCount
+ * @param {function(): void} props.toggleCart
+ */
 const CartButton = ({ itemCount, toggleCart }) => (
   <button
     onClick={toggleCart}
@@ -40,12 +64,18 @@ const CartButton = ({ itemCount, toggleCart }) => (
   </button>
 );
 
-// Subcomponente: Botón de WhatsApp
+/**
+ * @param {Object} props
+ * @param {string} [props.whatsapp] - Número de WhatsApp
+ */
 const WhatsAppButton = ({ whatsapp }) => {
   if (!whatsapp) return null;
+  
+  const cleanWhatsApp = whatsapp.replace(/[^0-9]/g, '');
+  
   return (
     <a
-      href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`}
+      href={`https://wa.me/${cleanWhatsApp}`}
       target="_blank"
       rel="noopener noreferrer"
       className="bg-success text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition-colors duration-150"
@@ -59,7 +89,11 @@ const WhatsAppButton = ({ whatsapp }) => {
   );
 };
 
-// Subcomponente: Menú móvil
+/**
+ * @param {Object} props
+ * @param {boolean} props.mobileMenuOpen
+ * @param {function(string): void} props.scrollToSection
+ */
 const MobileMenu = ({ mobileMenuOpen, scrollToSection }) => (
   mobileMenuOpen ? (
     <div className="md:hidden py-4 border-t border-gray-200">
@@ -76,9 +110,13 @@ const MobileMenu = ({ mobileMenuOpen, scrollToSection }) => (
 // Componente principal
 const Header = () => {
   const { itemCount, toggleCart } = useCart();
+  /** @type {[boolean, function(boolean): void]} */
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  /** @type {[CompanyInfo | null, function(CompanyInfo | null): void]} */
   const [companyInfo, setCompanyInfo] = useState(null);
+  /** @type {[boolean, function(boolean): void]} */
   const [loading, setLoading] = useState(true);
+  /** @type {[string | null, function(string | null): void]} */
   const [error, setError] = useState(null);
 
   // Handler para scroll suave y cerrar menú móvil
@@ -103,10 +141,13 @@ const Header = () => {
     setLoading(true);
     api.get('/api/company-info')
       .then(res => {
-        setCompanyInfo(res.data);
+        /** @type {CompanyInfo} */
+        const data = res.data;
+        setCompanyInfo(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('Error al cargar información de la empresa:', err);
         setError('Error al cargar información de la empresa');
         setLoading(false);
       });
@@ -118,29 +159,27 @@ const Header = () => {
   return (
     <>
       {/* <TrustBar /> */}
-      <nav className="bg-surface shadow-primary sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img src="/logo-text.png" alt="Amor Eterno" className="h-10 w-auto max-w-[180px] object-contain" />
+      <nav className="bg-surface shadow-primary sticky top-0 z-50 h-auto flex flex-col items-center py-4 md:py-6">
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center">
+          {/* Logo centrado arriba */}
+          <div className="flex justify-center items-center w-full mb-2 md:mb-4">
+            <img src="/logo-text.png" alt="Amor Eterno" className="h-16 md:h-24 w-auto max-w-[260px] object-contain transition-all duration-300" />
+          </div>
+          {/* Menú centrado debajo del logo y botones a la derecha en una sola fila */}
+          <div className="w-full relative flex flex-row items-center" style={{minHeight: '56px'}}>
+            {/* Menú centrado */}
+            <div className="absolute left-0 right-0 flex justify-center pointer-events-none">
+              <div className="pointer-events-auto">
+                <DesktopNav scrollToSection={scrollToSection} />
+              </div>
             </div>
-            <DesktopNav scrollToSection={scrollToSection} />
-            <div className="flex items-center space-x-4">
-              {/* Botón menú móvil */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-text-secondary hover:text-accent transition-colors duration-150"
-                aria-label="Abrir menú móvil"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-              </button>
+            {/* Botones a la derecha */}
+            <div className="ml-auto flex flex-row items-center space-x-3 md:space-x-6 relative z-10">
               <CartButton itemCount={itemCount} toggleCart={toggleCart} />
               <WhatsAppButton whatsapp={companyInfo.whatsapp} />
             </div>
           </div>
+          {/* Menú móvil debajo en mobile */}
           <MobileMenu mobileMenuOpen={mobileMenuOpen} scrollToSection={scrollToSection} />
         </div>
       </nav>

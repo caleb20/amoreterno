@@ -322,8 +322,8 @@ const CustomOrderUpload = () => {
   }, [uploadedImage, contactInfo, customMessage, fileInputRef]);
 
   return (
-    <div className="min-h-screen bg-background py-10">
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-primary-50 mb-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] overflow-hidden">
         <div className="bg-primary-500 p-6">
           <h1 className="text-3xl font-extrabold text-white">
             Orden Personalizada

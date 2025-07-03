@@ -65,7 +65,7 @@ const Cart = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed inset-y-0 right-0 w-full max-w-full sm:w-[400px] md:w-[480px] bg-surface shadow-2xl z-50 transition-all duration-500 ease-in-out transform translate-x-0 animate-slide-cart">
+      <div className="fixed inset-y-0 right-0 w-full max-w-full sm:w-[400px] md:w-[480px] bg-surface shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 transition-all duration-500 ease-in-out transform translate-x-0 animate-slide-cart">
 
         <div className="h-full flex flex-col">
           {/* Cart Header */}

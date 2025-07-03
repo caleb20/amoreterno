@@ -3,7 +3,7 @@ import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 
 const ProductSection = ({ selectedCategory }) => {
-  const { allProducts, categories, occasions, loading, error } = useProducts();
+  const { allProducts, categories = [], occasions = [], loading, error } = useProducts();
 
   // Determinar productos a mostrar según la categoría seleccionada
   let filteredProducts = allProducts;

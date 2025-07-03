@@ -69,7 +69,7 @@ const ContactSection = () => {
   if (error) return <div className="text-center text-error py-12">{error}</div>;
 
   return (
-    <section id="contacto" className="pt-6 pb-16 bg-primary-50">
+    <section id="contacto" className="pt-6 pb-16 bg-primary-50 animate-fade-in-up">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Info de entregas en estaciones */}
         <div className="mb-6">
@@ -80,10 +80,6 @@ const ContactSection = () => {
               Para entregas en otro lugar o provincia, coordinar por WhatsApp.
             </span>
           </div>
-        </div>
-        {/* Mapa de estaciones */}
-        <div className="mb-6">
-          <MapaEstacionesLinea1 />
         </div>
         <div className="grid md:grid-cols-2 gap-12">
           {/* Contact Information */}
