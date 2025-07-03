@@ -20,10 +20,12 @@ export default async function handler(
       return res.status(500).json({ error: error.message });
     }
 
-    const companyInfo = data && data.length > 0 ? data[0] : {};
-    res.status(200).json(companyInfo);
-  } catch (error) {
-    console.error('Unexpected error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    if (!data || data.length === 0) {
+      return res.status(404).json({ error: 'Company info not found' });
+    }
+
+    res.status(200).json(data[0]);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 }

@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../src/utils/supabaseClient';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { data, error } = await supabase
     .from('testimonials')
     .select('*');

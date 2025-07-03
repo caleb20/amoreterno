@@ -1,7 +1,8 @@
 // pages/api/products.js
+import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../src/utils/supabaseClient';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { data, error } = await supabase
       .from('products')
@@ -19,13 +20,12 @@ export default async function handler(req, res) {
     // Transformar el resultado para que cada producto tenga un array de occasion y tags
     const products = data.map(product => ({
       ...product,
-      occasion: product.product_occasions?.map(po => po.occasion_id) || [],
-      tags: product.product_tags?.map(pt => pt.tag) || [],
+      occasion: product.product_occasions?.map((po: any) => po.occasion_id) || [],
+      tags: product.product_tags?.map((pt: any) => pt.tag) || [],
     }));
 
     res.status(200).json(products);
-  } catch (e) {
-    console.error('API error:', e);
-    res.status(500).json({ error: e.message });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 }
