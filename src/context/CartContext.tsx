@@ -1,12 +1,42 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { Product, CartItem, Station } from '../types';
 
-const CartContext = createContext();
+interface CartContextType {
+  cart: CartItem[];
+  isOpen: boolean;
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, newQuantity: number) => void;
+  clearCart: () => void;
+  toggleCart: () => void;
+  closeCart: () => void;
+  openCart: () => void;
+  itemCount: number;
+  totalPrice: number;
+  estimatedDeliveryTime: string | null;
+  selectedStation: string;
+  setSelectedStation: (station: string) => void;
+}
 
-export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCartLoaded, setIsCartLoaded] = useState(false);
-  const [selectedStation, setSelectedStation] = useState("");
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+interface CartItemStorage {
+  id: number;
+  name: string;
+  price: number;
+  image?: string;
+  quantity: number;
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cart, setCart] = useState<CartItemStorage[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isCartLoaded, setIsCartLoaded] = useState<boolean>(false);
+  const [selectedStation, setSelectedStation] = useState<string>("");
 
   useEffect(() => {
     const savedCart = localStorage.getItem('magia-cart');
@@ -28,7 +58,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [cart, isCartLoaded]);
 
-  const addToCart = (product) => {
+  const addToCart = (product: Product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
@@ -38,16 +68,22 @@ export const CartProvider = ({ children }) => {
             : item
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        return [...prevCart, { 
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity: 1 
+        }];
       }
     });
   };
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = (productId: number) => {
     setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
-  const updateQuantity = (productId, newQuantity) => {
+  const updateQuantity = (productId: number, newQuantity: number) => {
     if (newQuantity <= 0) {
       removeFromCart(productId);
       return;
@@ -81,10 +117,21 @@ export const CartProvider = ({ children }) => {
   const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const estimatedDeliveryTime = cart.length > 0 ? "2-3 horas" : null;
 
+  // Convertir el cart interno a CartItem[] para compatibilidad
+  const cartItems: CartItem[] = cart.map(item => ({
+    product: {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image
+    } as Product,
+    quantity: item.quantity
+  }));
+
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cart: cartItems,
         isOpen,
         addToCart,
         removeFromCart,
@@ -105,7 +152,7 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => {
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error('useCart debe usarse dentro de un CartProvider');

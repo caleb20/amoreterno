@@ -322,7 +322,7 @@ const CustomOrderUpload = () => {
   }, [uploadedImage, contactInfo, customMessage, fileInputRef]);
 
   return (
-    <div className="bg-primary-50 mb-8">
+    <div id="personalizacion" className="bg-primary-50 mb-8">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] overflow-hidden">
         <div className="bg-primary-500 p-6">
           <h1 className="text-3xl font-extrabold text-white">

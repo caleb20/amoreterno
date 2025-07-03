@@ -63,16 +63,16 @@ const HeroCarousel = () => {
   };
 
   if (loading) return (
-    <section className="relative h-96 md:h-[500px] overflow-hidden animate-pulse">
+    <section className="relative h-[500px] md:h-[650px] lg:h-[750px] overflow-hidden animate-pulse">
       <div className="relative h-full w-full flex items-center justify-center bg-gray-200">
         {/* Skeleton para la imagen */}
         <div className="absolute inset-0 bg-gray-300 animate-pulse" />
         {/* Skeleton para el texto */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="w-2/3 h-10 bg-gray-400 rounded mb-4 animate-pulse" />
-          <div className="w-1/2 h-6 bg-gray-300 rounded mb-2 animate-pulse" />
-          <div className="w-1/3 h-5 bg-gray-200 rounded mb-8 animate-pulse" />
-          <div className="w-32 h-10 bg-gray-400 rounded-lg animate-pulse" />
+          <div className="w-2/3 h-12 bg-gray-400 rounded mb-6 animate-pulse" />
+          <div className="w-1/2 h-8 bg-gray-300 rounded mb-4 animate-pulse" />
+          <div className="w-1/3 h-6 bg-gray-200 rounded mb-10 animate-pulse" />
+          <div className="w-36 h-12 bg-gray-400 rounded-lg animate-pulse" />
         </div>
       </div>
     </section>
@@ -81,7 +81,7 @@ const HeroCarousel = () => {
   if (!slides.length) return null;
 
   return (
-    <section className="relative h-96 md:h-[500px] overflow-hidden">
+    <section className="relative h-[500px] md:h-[650px] lg:h-[750px] overflow-hidden">
       <div className="relative h-full">
         {slides.map((slide, index) => (
           <div

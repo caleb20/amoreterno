@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 
-const ProductSection = ({ selectedCategory }) => {
+interface ProductSectionProps {
+  selectedCategory: string;
+}
+
+const ProductSection: React.FC<ProductSectionProps> = ({ selectedCategory }) => {
   const { allProducts, categories = [], occasions = [], loading, error } = useProducts();
+  const [visibleProducts, setVisibleProducts] = useState(6); // Inicialmente mostrar 6 productos
+
+  // Resetear la cantidad de productos visibles cuando cambie la categoría
+  useEffect(() => {
+    setVisibleProducts(6);
+  }, [selectedCategory]);
 
   // Determinar productos a mostrar según la categoría seleccionada
   let filteredProducts = allProducts;
@@ -12,21 +22,29 @@ const ProductSection = ({ selectedCategory }) => {
 
   if (selectedCategory && selectedCategory !== 'todos') {
     // Buscar si es una categoría de flores
-    const category = categories.find(c => c.id === selectedCategory);
+    const category = categories.find(c => c.name === selectedCategory || c.id.toString() === selectedCategory);
     if (category) {
-      filteredProducts = allProducts.filter(product => product.category === selectedCategory);
+      filteredProducts = allProducts.filter(product => product.category === category.name);
       sectionTitle = category.name;
-      sectionDescription = category.description;
+      sectionDescription = category.description || '';
     } else {
       // Buscar si es una ocasión válida
-      const occasion = occasions.find(o => o.id === selectedCategory);
+      const occasion = occasions.find(o => o.id.toString() === selectedCategory || o.name === selectedCategory);
       if (occasion) {
         filteredProducts = allProducts.filter(product => Array.isArray(product.occasion) && product.occasion.includes(selectedCategory));
         sectionTitle = `Para: ${occasion.name}`;
-        sectionDescription = occasion.description;
+        sectionDescription = occasion.description || '';
       }
     }
   }
+
+  // Obtener productos para mostrar con paginación
+  const productsToShow = filteredProducts.slice(0, visibleProducts);
+  const hasMoreProducts = filteredProducts.length > visibleProducts;
+
+  const handleLoadMore = () => {
+    setVisibleProducts(prev => prev + 3); // Cargar 3 productos más
+  };
 
   if (loading) {
     return <div className="text-center py-12">Cargando productos...</div>;
@@ -48,8 +66,8 @@ const ProductSection = ({ selectedCategory }) => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
+          {productsToShow.length > 0 ? (
+            productsToShow.map(product => (
               <ProductCard key={product.id} product={product} />
             ))
           ) : (
@@ -58,6 +76,18 @@ const ProductSection = ({ selectedCategory }) => {
             </div>
           )}
         </div>
+
+        {/* Botón Ver más */}
+        {hasMoreProducts && (
+          <div className="text-center mt-12">
+            <button
+              onClick={handleLoadMore}
+              className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-600 transition-colors duration-300 font-medium"
+            >
+              Ver más productos ({filteredProducts.length - visibleProducts} restantes)
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

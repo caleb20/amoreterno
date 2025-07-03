@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../src/utils/axios';
 import Header from '../src/components/Header';
 import HeroCarousel from '../src/components/HeroCarousel';
@@ -16,11 +16,19 @@ import CategoryNavigation from '../src/components/CategoryNavigation';
 import ProductSection from '../src/components/ProductSection';
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('todos');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>('todos');
 
-  const handleCategoryChange = (categoryId) => {
+  const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
+  };
+
+  // Función para hacer scroll a ocasiones (sin toggle)
+  const scrollToOcasiones = () => {
+    const element = document.getElementById('ocasiones');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -41,11 +49,11 @@ export default function Home() {
         <link rel="icon" href="/logo.png" />
       </Head>
       <div className="min-h-screen bg-primary-50">
-        <Header />
+        <Header scrollToOcasiones={scrollToOcasiones} />
         <HeroCarousel />
-        <CategoryNavigation selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
-        <ProductSection selectedCategory={selectedCategory} />
+        <ProductSection selectedCategory="todos" />
         <OffersSection />
+        <CategoryNavigation selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
         <CustomOrderUpload />
         <div className="bg-white rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] px-0 py-4 md:px-6 md:py-6 mt-0 mb-0 w-full max-w-7xl mx-auto">
           <MapaEstacionesLinea1 />

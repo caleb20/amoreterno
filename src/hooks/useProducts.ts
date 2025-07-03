@@ -1,19 +1,29 @@
 import { useState, useMemo, useEffect } from 'react';
 import api from '../utils/axios';
+import type { Product, Category, Occasion } from '../types';
+
+interface Filters {
+  category: string;
+  occasion: string;
+  priceRange: { min: number; max: number };
+  onSale: boolean;
+  featured: boolean;
+}
 
 export const useProducts = () => {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     category: '',
     occasion: '',
     priceRange: { min: 0, max: 1000 },
     onSale: false,
     featured: false
   });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [products, setProducts] = useState([]);
-  const [occasions, setOccasions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [occasions, setOccasions] = useState<Occasion[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +36,18 @@ export const useProducts = () => {
         ]);
         setProducts(productsRes.data);
         setOccasions(occasionsRes.data);
-      } catch (err) {
+        
+        // Por ahora, extraer categorías únicas de los productos
+        const uniqueCategories = Array.from(
+          new Set(productsRes.data.map((product: Product) => product.category).filter(Boolean))
+        ).map((category, index) => ({
+          id: index + 1,
+          name: category as string,
+          description: `Categoría ${category}`
+        }));
+        setCategories(uniqueCategories);
+        
+      } catch (err: any) {
         setError(err.message || 'Error al cargar los datos');
       } finally {
         setLoading(false);
@@ -38,13 +59,13 @@ export const useProducts = () => {
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !product.description.toLowerCase().includes(searchTerm.toLowerCase())) {
+          !(product.description?.toLowerCase().includes(searchTerm.toLowerCase()))) {
         return false;
       }
       if (filters.category && product.category !== filters.category) {
         return false;
       }
-      if (filters.occasion && !product.occasion.includes(filters.occasion)) {
+      if (filters.occasion && !(product.occasion?.includes(filters.occasion))) {
         return false;
       }
       if (product.price < filters.priceRange.min || product.price > filters.priceRange.max) {
@@ -53,7 +74,7 @@ export const useProducts = () => {
       if (filters.onSale && !product.original_price) {
         return false;
       }
-      if (filters.featured && !product.featured) {
+      if (filters.featured && !(product.featured || product.is_featured)) {
         return false;
       }
       return true;
@@ -61,22 +82,22 @@ export const useProducts = () => {
   }, [products, filters, searchTerm]);
 
   const featuredProducts = useMemo(() => {
-    return products.filter(product => product.featured);
+    return products.filter(product => product.featured || product.is_featured);
   }, [products]);
 
   const saleProducts = useMemo(() => {
     return products.filter(product => product.original_price && product.discount);
   }, [products]);
 
-  const filterByCategory = (categoryId) => {
+  const filterByCategory = (categoryId: string) => {
     setFilters(prev => ({ ...prev, category: categoryId }));
   };
 
-  const filterByOccasion = (occasionId) => {
+  const filterByOccasion = (occasionId: string) => {
     setFilters(prev => ({ ...prev, occasion: occasionId }));
   };
 
-  const filterByPriceRange = (min, max) => {
+  const filterByPriceRange = (min: number, max: number) => {
     setFilters(prev => ({ ...prev, priceRange: { min, max } }));
   };
 
@@ -99,16 +120,16 @@ export const useProducts = () => {
     setSearchTerm('');
   };
 
-  const getProductById = (productId) => {
+  const getProductById = (productId: number) => {
     return products.find(product => product.id === productId);
   };
 
-  const getProductsByCategory = (categoryId) => {
+  const getProductsByCategory = (categoryId: string) => {
     return products.filter(product => product.category === categoryId);
   };
 
-  const getProductsByOccasion = (occasionId) => {
-    return products.filter(product => product.occasion.includes(occasionId));
+  const getProductsByOccasion = (occasionId: string) => {
+    return products.filter(product => product.occasion?.includes(occasionId));
   };
 
   return {
@@ -116,6 +137,7 @@ export const useProducts = () => {
     allProducts: products,
     featuredProducts,
     saleProducts,
+    categories,
     occasions,
     filters,
     searchTerm,
