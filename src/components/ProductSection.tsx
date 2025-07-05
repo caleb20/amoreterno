@@ -58,13 +58,13 @@ const ProductSection: React.FC<ProductSectionProps> = ({ selectedCategory }) => 
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productsToShow.length > 0 ? (
             productsToShow.map(product => (
               <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <div className="col-span-3 text-center text-text-secondary py-12">
+            <div className="col-span-full text-center text-text-secondary py-12">
               No hay productos para esta selección.
             </div>
           )}

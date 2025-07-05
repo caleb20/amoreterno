@@ -186,7 +186,7 @@ const Cart: React.FC = () => {
               <p className="text-gray-500 text-lg">Tu carrito está vacío</p>
               <button
                 onClick={closeCart}
-                className="mt-4 bg-accent text-white px-6 py-2 rounded-lg hover:bg-accent-dark transition-colors"
+                className="btn-accent mt-4"
               >
                 Continuar Comprando
               </button>
@@ -205,26 +205,26 @@ const Cart: React.FC = () => {
                       />
                     )}
                     <div className="flex-1">
-                      <h3 className="font-semibold">{item.product.name}</h3>
-                      <p className="text-accent font-bold">S/ {item.product.price}</p>
+                      <h3 className="font-semibold text-gray-800">{item.product.name}</h3>
+                      <p className="text-primary font-bold text-lg">S/ {item.product.price}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        className="w-8 h-8 rounded-full border-2 border-primary bg-primary-50 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 font-semibold text-primary hover:border-primary"
                       >
                         -
                       </button>
-                      <span className="w-8 text-center">{item.quantity}</span>
+                      <span className="w-8 text-center font-bold text-primary text-lg">{item.quantity}</span>
                       <button
                         onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        className="w-8 h-8 rounded-full border-2 border-primary bg-primary-50 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 font-semibold text-primary hover:border-primary"
                       >
                         +
                       </button>
                       <button
                         onClick={() => handleRemove(item.product.id)}
-                        className="ml-2 text-red-500 hover:text-red-700"
+                        className="ml-2 text-red-500 hover:text-red-700 text-lg"
                       >
                         🗑️
                       </button>
@@ -236,11 +236,11 @@ const Cart: React.FC = () => {
               {/* Total */}
               <div className="border-t pt-4 mb-6">
                 <div className="flex justify-between items-center text-xl font-bold">
-                  <span>Total:</span>
-                  <span className="text-accent">S/ {totalPrice.toFixed(2)}</span>
+                  <span className="text-gray-800">Total:</span>
+                  <span className="text-primary text-2xl">S/ {totalPrice.toFixed(2)}</span>
                 </div>
                 {estimatedDeliveryTime && (
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-700 mt-2">
                     Tiempo estimado: {estimatedDeliveryTime}
                   </p>
                 )}
@@ -311,7 +311,7 @@ const Cart: React.FC = () => {
               {/* Selección de punto de entrega */}
               <div className="mb-6">
                 <div className="text-sm text-gray-600 mb-1">
-                  <span className="font-semibold text-accent">Lugar de entrega:</span>
+                  <span className="font-bold text-primary text-base">Lugar de entrega:</span>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-1">
                   <button
@@ -322,7 +322,7 @@ const Cart: React.FC = () => {
                       setSelectedStation(selectedStation === 'OTROS' ? '' : selectedStation);
                       if (selectedStation && selectedStation !== 'OTROS') {
                         const notification = document.createElement('div');
-                        notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                        notification.className = 'fixed top-20 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50';
                         notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${selectedStation}</b></span>\n      </div>\n    `;
                         document.body.appendChild(notification);
                         setTimeout(() => {
@@ -349,8 +349,8 @@ const Cart: React.FC = () => {
                       setIsProvince(false);
                       setSelectedStation('OTROS');
                       const notification = document.createElement('div');
-                      notification.className = 'fixed top-20 right-4 bg-warning text-white px-6 py-3 rounded-lg shadow-lg z-50';
-                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Otros (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
+                      notification.className = 'fixed top-20 right-4 bg-secondary text-gray-800 px-6 py-3 rounded-lg shadow-lg z-50 border border-secondary-300';
+                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Otros (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
                       document.body.appendChild(notification);
                       setTimeout(() => {
                         document.body.removeChild(notification);
@@ -366,8 +366,8 @@ const Cart: React.FC = () => {
                       setIsProvince(true);
                       setSelectedStation('');
                       const notification = document.createElement('div');
-                      notification.className = 'fixed top-20 right-4 bg-warning text-white px-6 py-3 rounded-lg shadow-lg z-50';
-                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Provincia (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
+                      notification.className = 'fixed top-20 right-4 bg-accent text-gray-800 px-6 py-3 rounded-lg shadow-lg z-50 border border-accent-300';
+                      notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"/>\n        </svg>\n        <span>Lugar de entrega: <b>Provincia (coordinar por WhatsApp)</b></span>\n      </div>\n    `;
                       document.body.appendChild(notification);
                       setTimeout(() => {
                         document.body.removeChild(notification);
@@ -390,7 +390,7 @@ const Cart: React.FC = () => {
               <button
                 onClick={handleWhatsAppOrder}
                 disabled={loading || cart.length === 0}
-                className="w-full bg-success text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="btn-success w-full disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-500"
               >
                 {loading ? 'Enviando...' : 'Enviar Pedido'}
               </button>

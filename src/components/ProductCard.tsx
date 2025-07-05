@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
     
     // Show notification
     const notification = document.createElement('div');
-    notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+    notification.className = 'fixed top-20 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
     notification.innerHTML = `
       <div class="flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,147 +55,155 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
 
   if (compact) {
     return (
-      <div className="card-product group cursor-pointer relative" onClick={handleAddToCart}>
-        {product.discount && (
-          <div className="absolute top-4 right-4 z-10">
-            <span className="bg-error text-white px-3 py-1 rounded-full text-sm font-bold">
+      <div className="product-card-compact group cursor-pointer relative" onClick={handleAddToCart}>
+        {/* Badges */}
+        <div className="absolute top-3 left-3 right-3 z-20 flex justify-between items-start">
+          {product.tags?.includes('popular') && (
+            <span className="featured-badge">⭐ Popular</span>
+          )}
+          {product.discount && (
+            <span className="discount-badge">
               -{product.discount}%
             </span>
-          </div>
-        )}
-        <div className="relative overflow-hidden rounded-t-lg">
+          )}
+        </div>
+        
+        {/* Imagen */}
+        <div className="relative overflow-hidden product-image-hover">
           <img
             src={product.image || '/placeholder-flower.jpg'}
             alt={product.name}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="product-image"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
             }}
           />
-          {/* Botón Agregar al Carrito en hover */}
+          
+          {/* Botón en hover */}
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
             <button
               onClick={(e) => { e.stopPropagation(); handleAddToCart(e); }}
-              className="bg-accent text-white px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-sm"
+              className="btn-compact-primary opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
             >
               Agregar al Carrito
             </button>
           </div>
         </div>
+        
+        {/* Contenido compacto */}
         <div className="p-4">
-          <h3 className="font-poppins font-semibold text-text-primary mb-2">{product.name}</h3>
-          <div className="flex items-center space-x-2 mb-2">
+          <h3 className="product-title mb-3 text-lg">{product.name}</h3>
+          
+          <div className="flex items-center justify-between mb-2">
             {product.original_price && (
-              <span className="text-sm text-text-secondary line-through">
+              <span className="price-original text-sm">
                 S/. {product.original_price.toFixed(2)}
               </span>
             )}
-            <span className="text-lg font-poppins font-bold text-accent">
+            <span className="price-badge text-base">
               S/. {product.price.toFixed(2)}
             </span>
           </div>
-          {/* Información de tiempo para ofertas en modo compact */}
-          {(product.discount || product.original_price) && (
-            <div className="text-xs text-warning">⏰ Oferta válida hasta 4 horas</div>
-          )}
+          
+          {/* Información compacta */}
+          <div className="flex gap-2 text-sm">
+            <span className="delivery-badge">🚚 2-4h</span>
+            {(product.discount || product.original_price) && (
+              <span className="time-badge">⏰ 4h</span>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="card-product group cursor-pointer relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-      {/* Badge de descuento */}
-      {product.discount && (
-        <div className="absolute top-4 right-4 z-10">
-          <span className="bg-error text-white px-3 py-1 rounded-full text-sm font-bold">
+    <div className="product-card-compact group cursor-pointer relative">
+      {/* Badges en la parte superior */}
+      <div className="absolute top-3 left-3 right-3 z-20 flex justify-between items-start">
+        {/* Badges izquierda */}
+        <div className="flex flex-col gap-1">
+          {product.tags?.includes('popular') && (
+            <span className="featured-badge">⭐ Popular</span>
+          )}
+          {product.tags?.includes('exclusivo') && (
+            <span className="bg-secondary text-gray-800 px-2 py-1 rounded-full text-xs font-semibold shadow-sm">
+              🌟 Exclusivo
+            </span>
+          )}
+          {product.is_featured && !product.discount && (
+            <span className="featured-badge">✨ Destacado</span>
+          )}
+        </div>
+        
+        {/* Badge de descuento derecha */}
+        {product.discount && (
+          <span className="discount-badge">
             -{product.discount}%
-          </span>
-        </div>
-      )}
-      
-      {/* Badge de destacado */}
-      {product.is_featured && !product.discount && (
-        <div className="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-semibold z-10">
-          Destacado
-        </div>
-      )}
-      
-      {/* Product Tags */}
-      <div className="absolute top-4 left-4">
-        {product.tags?.includes('popular') && (
-          <span className="bg-accent text-white px-2 py-1 rounded-full text-sm font-medium mr-2">
-            Más Popular
-          </span>
-        )}
-        {product.tags?.includes('exclusivo') && (
-          <span className="bg-secondary text-white px-2 py-1 rounded-full text-sm font-medium mr-2">
-            Exclusivo
-          </span>
-        )}
-        {product.tags?.includes('combo') && (
-          <span className="bg-primary text-white px-2 py-1 rounded-full text-sm font-medium">
-            Combo
           </span>
         )}
       </div>
       
       {/* Imagen del producto */}
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative overflow-hidden product-image-hover">
         <img
           src={product.image || '/placeholder-flower.jpg'}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="product-image"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
           }}
         />
         
-        {/* Hover Add to Cart Button */}
+        {/* Overlay con botón en hover (solo desktop) */}
         {showAddToCart && (
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 hidden md:flex items-center justify-center">
             <button
               onClick={handleAddToCart}
-              className="bg-accent text-white px-6 py-2 rounded-lg opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+              disabled={product.stock === 0}
+              className="btn-primary opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Agregar al Carrito
+              {product.stock === 0 ? 'Sin stock' : 'Agregar al Carrito'}
             </button>
           </div>
         )}
       </div>
       
-      {/* Contenido de la tarjeta */}
+      {/* Contenido de la tarjeta - Completo */}
       <div className="p-6">
-        <h3 className="text-xl font-poppins font-semibold text-text-primary mb-2 group-hover:text-accent transition-colors duration-200">
+        {/* Título del producto */}
+        <h3 className="text-xl font-poppins font-semibold text-text-primary mb-3 group-hover:text-primary transition-colors duration-200">
           {product.name}
         </h3>
         
+        {/* Descripción si existe */}
         {product.description && (
-          <p className="text-text-secondary mb-4 line-clamp-2">
+          <p className="text-text-secondary mb-4 line-clamp-2 text-sm">
             {product.description}
           </p>
         )}
         
-        {/* Rating */}
+        {/* Precios y Rating */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             {product.original_price && (
-              <span className="text-lg text-text-secondary line-through">
+              <span className="text-sm text-gray-500 line-through font-medium">
                 S/. {product.original_price.toFixed(2)}
               </span>
             )}
-            <span className="text-2xl font-poppins font-bold text-accent">
+            <span className="text-lg font-poppins font-bold price-badge">
               S/. {product.price.toFixed(2)}
             </span>
           </div>
           
+          {/* Rating completo */}
           <div className="flex items-center space-x-1">
             <div className="flex">
-              {renderStars(4.5)} {/* Puedes usar un rating real del producto */}
+              {renderStars(4.5)}
             </div>
-            <span className="text-sm text-text-secondary">(4.5)</span>
+            <span className="text-sm text-text-secondary ml-1">(4.5)</span>
           </div>
         </div>
         
@@ -216,9 +224,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
         )}
         
         {/* Información de entrega */}
-        <div className="mt-3 text-sm text-success">
-          <span className="flex items-center">
-            <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <div className="mt-3 text-sm">
+          <span className="flex items-center bg-mint-50 text-green-700 px-3 py-2 rounded-lg font-medium border border-mint-200">
+            <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
             </svg>
             Entrega en 2-4 horas
@@ -227,9 +235,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
 
         {/* Información de oferta válida */}
         {(product.discount || product.original_price) && (
-          <div className="mt-3 text-sm text-warning">
-            <span className="flex items-center">
-              <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <div className="mt-3 text-sm">
+            <span className="flex items-center bg-orange-50 text-orange-700 px-3 py-2 rounded-lg font-medium border border-orange-200">
+              <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
               </svg>
               Oferta válida hasta 4 horas
@@ -237,14 +245,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
           </div>
         )}
         
-        {/* Botón de agregar al carrito para móvil */}
+        {/* Botón para móvil */}
         {showAddToCart && (
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0}
-            className="w-full bg-accent text-white py-3 px-6 rounded-xl font-semibold hover:bg-accent-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 transform hover:scale-105 active:scale-95 mt-4 md:hidden"
+            className="btn-primary w-full disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-500 mt-4 md:hidden transform hover:scale-105 active:scale-95 py-3 text-base"
           >
-            {product.stock === 0 ? 'Sin stock' : 'Agregar al carrito'}
+            {product.stock === 0 ? 'Sin stock' : '🛒 Agregar al carrito'}
           </button>
         )}
       </div>

@@ -322,9 +322,10 @@ const CustomOrderUpload: React.FC = () => {
           window.emailjs.init('yXg6YZq8x4NZFxZNi');
           // Prepara los parámetros para la plantilla
           const templateParams = {
-            name: contactInfo.name,
-            phone: contactInfo.phone,
-            email: contactInfo.email || 'No proporcionado',
+            title: 'Pedido de Personalización',
+            from_name: contactInfo.name,
+            from_phone: contactInfo.phone,
+            from_email: contactInfo.email || 'No proporcionado',
             message: customMessage || 'Sin mensaje personalizado',
             image_url: data.imageUrl,
           };

@@ -2,6 +2,80 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
 
+/* 🎨 Paleta de Colores Centralizada - Amor Eterno */
+:root {
+  /* Colores principales */
+  --color-primary: #FF99C8;      /* Rosa */
+  --color-secondary: #A9DEF9;    /* Celeste */
+  --color-accent: #E4C1F9;       /* Lavanda */
+  --color-background: #FCF6BD;   /* Amarillo claro */
+  --color-mint: #D0F4DE;         /* Verde menta */
+  
+  /* Variaciones de intensidad */
+  --color-primary-light: #FFB3DD;
+  --color-primary-dark: #E6739F;
+  --color-secondary-light: #C3EBFF;
+  --color-secondary-dark: #66B1D4;
+  --color-accent-light: #EBD7FF;
+  --color-accent-dark: #C186DA;
+  --color-background-light: #FDFBDE;
+  --color-background-dark: #E1D56E;
+  --color-mint-light: #E7FCE7;
+  --color-mint-dark: #92CDB7;
+  
+  /* Colores funcionales */
+  --color-success: #D0F4DE;
+  --color-warning: #FCF6BD;
+  --color-error: #FF6B9D;
+  --color-info: #A9DEF9;
+  
+  /* Colores de texto */
+  --color-text-primary: #1A202C;
+  --color-text-secondary: #4A5568;
+  --color-text-muted: #718096;
+  --color-text-light: #A0AEC0;
+  
+  /* Colores de superficie */
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #FFFEF9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F7FAFC;
+}
+
+/* Estilos base con variables */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+/* Clases utilitarias personalizadas */
+.bg-brand-primary { background-color: var(--color-primary); }
+.bg-brand-secondary { background-color: var(--color-secondary); }
+.bg-brand-accent { background-color: var(--color-accent); }
+.bg-brand-background { background-color: var(--color-background); }
+.bg-brand-mint { background-color: var(--color-mint); }
+
+.text-brand-primary { color: var(--color-primary); }
+.text-brand-secondary { color: var(--color-secondary); }
+.text-brand-accent { color: var(--color-accent); }
+
+.border-brand-primary { border-color: var(--color-primary); }
+.border-brand-accent { border-color: var(--color-accent); }
+
+/* Gradientes con la paleta */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+}
+
+.gradient-soft {
+  background: linear-gradient(135deg, var(--color-background), var(--color-mint));
+}
+
+.gradient-cool {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-mint));
+}
+
 *, ::before, ::after{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;

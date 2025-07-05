@@ -58,7 +58,7 @@ const CartButton: React.FC<CartButtonProps> = ({ itemCount, toggleCart }) => (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h12M7 19h12"/>
     </svg>
     {itemCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+      <span className="absolute -top-1 -right-1 bg-purple-300 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
         {itemCount}
       </span>
     )}
@@ -74,7 +74,8 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ whatsapp }) => {
       href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-success text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition-colors duration-150"
+      className="bg-green-500 hover:bg-green-600 text-white font-poppins font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 hover:scale-105 transition-all duration-200 shadow-lg"
+      style={{ backgroundColor: '#25D366' }}
       aria-label="Contactar por WhatsApp"
     >
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

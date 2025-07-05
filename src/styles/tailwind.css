@@ -5,61 +5,89 @@
 @tailwind utilities;
 
 :root {
-  /* Primary Colors */
-  --color-primary: #F8BBD9; /* Soft blush pink - brand anchor */
-  --color-primary-50: #FEF7F3;
-  --color-primary-100: #FDE8E8;
-  --color-primary-200: #FBD5D5;
-  --color-primary-300: #F8BBD9; /* Main primary */
-  --color-primary-400: #F5A3C7;
-  --color-primary-500: #F28BB5;
-  --color-primary-600: #EF73A3;
-  --color-primary-700: #EC5B91;
-  --color-primary-800: #E9437F;
-  --color-primary-900: #E62B6D;
+  /* 🌸 Primary Colors - Rosa (#FF99C8) */
+  --color-primary: #FF99C8; /* Rosa principal - Tu color específico */
+  --color-primary-50: #FFF3F8;
+  --color-primary-100: #FFE6F2;
+  --color-primary-200: #FFCCEB;
+  --color-primary-300: #FFB3DD;
+  --color-primary-400: #FF99C8; /* Main primary - Tu color */
+  --color-primary-500: #FF80B8;
+  --color-primary-600: #E6739F;
+  --color-primary-700: #CC6685;
+  --color-primary-800: #B3596C;
+  --color-primary-900: #994C52;
 
-  /* Secondary Colors */
-  --color-secondary: #B8C5A6; /* Sage green - freshness */
-  --color-secondary-50: #F7F9F5;
-  --color-secondary-100: #EFF3EB;
-  --color-secondary-200: #E7EDE1;
-  --color-secondary-300: #DFE7D7;
-  --color-secondary-400: #D7E1CD;
-  --color-secondary-500: #CFDBC3;
-  --color-secondary-600: #C7D5B9;
-  --color-secondary-700: #BFCFAF;
-  --color-secondary-800: #B8C5A6; /* Main secondary */
-  --color-secondary-900: #A8B596;
+  /* 🌊 Secondary Colors - Celeste (#A9DEF9) */
+  --color-secondary: #A9DEF9; /* Celeste principal - Tu color específico */
+  --color-secondary-50: #F0FAFF;
+  --color-secondary-100: #E1F5FF;
+  --color-secondary-200: #C3EBFF;
+  --color-secondary-300: #A9DEF9; /* Main secondary - Tu color */
+  --color-secondary-400: #8FD1F3;
+  --color-secondary-500: #75C4ED;
+  --color-secondary-600: #66B1D4;
+  --color-secondary-700: #579EBB;
+  --color-secondary-800: #488BA2;
+  --color-secondary-900: #397889;
 
-  /* Accent Colors */
-  --color-accent: #D63384; /* Deep rose - CTAs only */
-  --color-accent-50: #FDF2F8;
-  --color-accent-100: #FCE7F3;
-  --color-accent-200: #FBCFE8;
-  --color-accent-300: #F9A8D4;
-  --color-accent-400: #F472B6;
-  --color-accent-500: #EC4899;
-  --color-accent-600: #D63384; /* Main accent */
-  --color-accent-700: #BE185D;
-  --color-accent-800: #9D174D;
-  --color-accent-900: #831843;
+  /* 💜 Accent Colors - Lavanda (#E4C1F9) */
+  --color-accent: #E4C1F9; /* Lavanda principal - Tu color específico */
+  --color-accent-50: #FAF5FF;
+  --color-accent-100: #F5EBFF;
+  --color-accent-200: #EBD7FF;
+  --color-accent-300: #E4C1F9; /* Main accent - Tu color */
+  --color-accent-400: #DDABF6;
+  --color-accent-500: #D695F3;
+  --color-accent-600: #C186DA;
+  --color-accent-700: #AC77C1;
+  --color-accent-800: #9768A8;
+  --color-accent-900: #82598F;
+
+  /* 🌿 Verde Menta (#D0F4DE) */
+  --color-mint: #D0F4DE; /* Verde menta - Tu color específico */
+  --color-mint-50: #F7FEF9;
+  --color-mint-100: #EFFDF3;
+  --color-mint-200: #E7FCE7;
+  --color-mint-300: #D0F4DE; /* Main mint - Tu color */
+  --color-mint-400: #B9ECD5;
+  --color-mint-500: #A2E4CC;
+  --color-mint-600: #92CDB7;
+  --color-mint-700: #82B6A2;
+  --color-mint-800: #729F8D;
+  --color-mint-900: #628878;
+
+  /* ☀️ Amarillo Claro (#FCF6BD) */
+  --color-yellow: #FCF6BD; /* Amarillo claro - Tu color específico */
+  --color-yellow-50: #FFFEF9;
+  --color-yellow-100: #FEFDEB;
+  --color-yellow-200: #FDFBDE;
+  --color-yellow-300: #FCF6BD; /* Main yellow - Tu color */
+  --color-yellow-400: #FBF29B;
+  --color-yellow-500: #FAEE7A;
+  --color-yellow-600: #E1D56E;
+  --color-yellow-700: #C8BC62;
+  --color-yellow-800: #AFA356;
+  --color-yellow-900: #968A4A;
 
   /* Background Colors */
-  --color-background: #FFF8F5; /* Clean canvas with warmth */
-  --color-surface: #FFFFFF; /* Product cards and forms */
+  --color-background: #FFFEF9; /* Fondo principal con tinte amarillo muy sutil */
+  --color-surface: #FFFFFF; /* Product cards y formularios */
 
   /* Text Colors */
-  --color-text-primary: #2D3748; /* High contrast - gray-800 */
-  --color-text-secondary: #718096; /* Supporting details - gray-500 */
+  --color-text-primary: #2D3748; /* Alto contraste - gray-800 */
+  --color-text-secondary: #4A5568; /* Detalles secundarios - gray-600 */
+  --color-text-muted: #718096; /* Texto silenciado - gray-500 */
 
-  /* Status Colors */
-  --color-success: #38A169; /* Delivery confirmations - green-500 */
-  --color-warning: #ED8936; /* Same-day cutoff - orange-400 */
-  --color-error: #E53E3E; /* Form validation - red-500 */
+  /* Status Colors (usando tus colores) */
+  --color-success: #D0F4DE; /* Confirmaciones - verde menta */
+  --color-warning: #FCF6BD; /* Avisos - amarillo claro */
+  --color-error: #FF6B9D; /* Errores - derivado de tu rosa */
+  --color-info: #A9DEF9; /* Info - celeste */
 
   /* Border Colors */
   --color-border: #E2E8F0; /* Form inputs - gray-200 */
-  --color-border-active: #D63384; /* Active states - accent */
+  --color-border-active: #E4C1F9; /* Active states - lavanda */
 }
 
 @layer base {
@@ -75,40 +103,134 @@
 }
 
 @layer components {
+  /* 🌸 Botones Principales - Rosa con buen contraste */
   .btn-primary {
-    @apply bg-accent text-white font-poppins font-semibold px-6 py-3 rounded-lg shadow-accent transition-all duration-250 ease-in-out;
+    @apply bg-primary text-white font-poppins font-semibold px-6 py-3 rounded-lg shadow-primary transition-all duration-250 ease-in-out;
+    background: linear-gradient(135deg, #FF99C8 0%, #E6739F 100%);
   }
 
   .btn-primary:hover {
-    @apply shadow-accent-lg transform -translate-y-0.5;
+    @apply shadow-primary-lg transform -translate-y-0.5;
+    background: linear-gradient(135deg, #FF80B8 0%, #CC6685 100%);
   }
 
+  /* 🌊 Botones Secundarios - Celeste */
+  .btn-secondary {
+    @apply bg-secondary text-gray-800 font-poppins font-semibold px-6 py-3 rounded-lg shadow-secondary transition-all duration-250 ease-in-out;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-secondary-400 shadow-secondary transform -translate-y-0.5;
+  }
+
+  /* 💜 Botones de Acento - Lavanda */
+  .btn-accent {
+    @apply bg-accent text-gray-800 font-poppins font-semibold px-6 py-3 rounded-lg shadow-accent transition-all duration-250 ease-in-out;
+  }
+
+  .btn-accent:hover {
+    @apply bg-accent-300 shadow-accent-lg transform -translate-y-0.5;
+  }
+
+  /* 🌿 Botones Exitosos - Verde Menta */
+  .btn-success {
+    @apply bg-mint text-gray-800 font-poppins font-semibold px-6 py-3 rounded-lg shadow-mint transition-all duration-250 ease-in-out;
+  }
+
+  .btn-success:hover {
+    @apply bg-mint-300 shadow-mint transform -translate-y-0.5;
+  }
+
+  /* 📱 Tarjetas de Producto */
   .card-product {
     @apply bg-surface rounded-lg shadow-primary border border-gray-200 transition-all duration-150 ease-in-out;
+    background: linear-gradient(145deg, #ffffff 0%, #fefefe 100%);
   }
 
   .card-product:hover {
     @apply shadow-primary-lg;
+    transform: translateY(-2px);
   }
 
-  .input-field {
-    @apply border border-gray-200 rounded-md px-4 py-2 focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-150 ease-in-out;
+  /* 🛍️ Estilos Optimizados para Tarjetas de Producto */
+  .product-card-compact {
+    @apply bg-surface rounded-xl shadow-sm border border-gray-100 transition-all duration-300 ease-in-out overflow-hidden;
+    background: linear-gradient(145deg, #ffffff 0%, #fcfcfc 100%);
+    max-width: 480px;
+    margin: 0 auto;
   }
 
-  .shadow-primary {
-    box-shadow: 0 4px 12px rgba(248, 187, 217, 0.15);
+  .product-card-compact:hover {
+    @apply shadow-primary transform -translate-y-1 border-primary/20;
   }
 
-  .shadow-primary-lg {
-    box-shadow: 0 6px 16px rgba(248, 187, 217, 0.2);
+  /* 🏷️ Badge de Precio */
+  .price-badge {
+    @apply bg-primary text-white px-4 py-2 rounded-lg font-poppins font-bold shadow-sm;
+    background: linear-gradient(135deg, #FF99C8 0%, #E6739F 100%);
   }
 
-  .shadow-accent {
-    box-shadow: 0 8px 24px rgba(214, 51, 132, 0.2);
+  /* 🎯 Badge de Descuento */
+  .discount-badge {
+    @apply bg-red-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-sm;
   }
 
-  .shadow-accent-lg {
-    box-shadow: 0 12px 32px rgba(214, 51, 132, 0.3);
+  /* ⏰ Badge de Tiempo */
+  .time-badge {
+    @apply bg-orange-100 text-orange-700 px-3 py-1.5 rounded-md text-sm font-medium border border-orange-200;
+  }
+
+  /* 🚚 Badge de Entrega */
+  .delivery-badge {
+    @apply bg-mint-50 text-green-700 px-3 py-1.5 rounded-md text-sm font-medium border border-mint-200;
+  }
+
+  /* 🌟 Badge de Destacado */
+  .featured-badge {
+    @apply bg-accent text-gray-800 px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm;
+  }
+
+  /* 📱 Botón Compacto */
+  .btn-compact {
+    @apply font-poppins font-medium px-5 py-2.5 rounded-lg text-base transition-all duration-250 ease-in-out;
+  }
+
+  .btn-compact-primary {
+    @apply btn-compact bg-primary text-white shadow-sm;
+    background: linear-gradient(135deg, #FF99C8 0%, #E6739F 100%);
+  }
+
+  .btn-compact-primary:hover {
+    @apply shadow-primary transform -translate-y-0.5;
+    background: linear-gradient(135deg, #FF80B8 0%, #CC6685 100%);
+  }
+
+  /* 🖼️ Imagen de Producto Optimizada */
+  .product-image {
+    @apply w-full h-60 object-cover transition-transform duration-500;
+  }
+
+  .product-image-hover:hover .product-image {
+    @apply scale-105;
+  }
+
+  /* 📝 Título de Producto */
+  .product-title {
+    @apply font-poppins font-semibold text-gray-800 text-lg leading-tight line-clamp-2;
+  }
+
+  .product-title:hover {
+    @apply text-primary;
+  }
+
+  /* 💰 Precio Original */
+  .price-original {
+    @apply text-sm text-gray-500 line-through font-medium;
+  }
+
+  /* 🎨 Gradiente para Overlay */
+  .overlay-gradient {
+    background: linear-gradient(0deg, rgba(0,0,0,0.3) 0%, transparent 70%);
   }
 }
 

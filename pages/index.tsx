@@ -70,32 +70,32 @@ gtag('config', 'G-XXXXXXXXXX');`
         }} />
         <style>{`body { font-family: 'Poppins', sans-serif; }`}</style>
       </Head>
-      <main className="min-h-screen bg-primary-50">
+      <main className="min-h-screen bg-surface">
         <Header scrollToOcasiones={scrollToOcasiones} />
-        <section className="relative z-10 bg-gradient-to-br from-pink-100 via-pink-50 to-white pb-8 pt-2">
+        <section className="relative z-10 bg-gradient-to-br from-primary-50 via-secondary-50 to-surface pb-8 pt-2">
           <HeroCarousel />
         </section>
-        <section className="bg-white/90 py-12">
+        <section className="bg-surface py-12">
           <ProductSection selectedCategory={selectedCategory} />
         </section>
-        <section className="bg-gradient-to-br from-pink-50 via-white to-primary-50 py-12">
+        <section className="bg-gradient-to-br from-secondary-50 via-surface to-accent-50 py-12">
           <OffersSection />
         </section>
-        <section className="bg-white/90 py-12">
+        <section className="bg-surface py-12">
           <CategoryNavigation selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
         </section>
-        <section className="bg-gradient-to-br from-pink-50 via-white to-primary-50 py-12">
+        <section className="bg-gradient-to-br from-mint-50 via-surface to-primary-50 py-12">
           <CustomOrderUpload />
         </section>
-        <section className="bg-white/90 py-12">
-          <div id="mapa-estaciones" className="rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] px-0 py-4 md:px-6 md:py-6 mt-0 mb-0 w-full max-w-7xl mx-auto">
+        <section className="bg-surface py-12">
+          <div id="mapa-estaciones" className="rounded-2xl shadow-primary transition-shadow duration-300 hover:shadow-primary-lg px-0 py-4 md:px-6 md:py-6 mt-0 mb-0 w-full max-w-7xl mx-auto">
             <MapaEstacionesLinea1 />
           </div>
         </section>
-        <section className="bg-gradient-to-br from-pink-50 via-white to-primary-50 py-12">
+        <section className="bg-gradient-to-br from-accent-50 via-surface to-mint-50 py-12">
           <TestimonialsSection />
         </section>
-        <section className="bg-white/90 py-12">
+        <section className="bg-surface py-12">
           <ContactSection />
         </section>
         <footer className="bg-gray-900 text-white py-12 mt-8">

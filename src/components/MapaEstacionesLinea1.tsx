@@ -95,7 +95,7 @@ const MapaEstacionesLinea1 = () => {
               setSelectedStation(est ? est.nombre : '');
               if (est) {
                 const notification = document.createElement('div');
-                notification.className = 'fixed top-20 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                notification.className = 'fixed top-20 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50';
                 notification.innerHTML = `\n      <div class=\"flex items-center space-x-2\">\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"/>\n        </svg>\n        <span>Estación seleccionada: <b>${est.nombre}</b></span>\n      </div>\n    `;
                 document.body.appendChild(notification);
                 setTimeout(() => {
