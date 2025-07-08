@@ -358,16 +358,17 @@ const CustomOrderUpload: React.FC = () => {
   }, [uploadedImage, contactInfo, customMessage, fileInputRef]);
 
   return (
-    <div id="personalizacion" className="bg-primary-50 mb-8">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] overflow-hidden">
-        <div className="bg-primary-500 p-6">
-          <h1 className="text-3xl font-extrabold text-white">
-            Orden Personalizada
-          </h1>
-          <p className="text-sm text-primary-100 mt-1">
-            Completa los siguientes pasos para crear tu orden personalizada.
-          </p>
-        </div>
+    <section id="personalizacion" className="py-16 bg-primary-50">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl shadow-2xl transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.18)] overflow-hidden">
+          <div className="bg-primary-500 p-6">
+            <h1 className="text-3xl font-extrabold text-white">
+              Orden Personalizada
+            </h1>
+            <p className="text-sm text-primary-100 mt-1">
+              Completa los siguientes pasos para crear tu orden personalizada.
+            </p>
+          </div>
         <div className="divide-y divide-border md:divide-y-0 md:divide-x flex flex-col md:flex-row">
           {/* Sección de subida de imagen */}
           <div className="md:w-1/2">
@@ -396,6 +397,7 @@ const CustomOrderUpload: React.FC = () => {
             />
           </div>
         </div>
+        </div>
         {/* Mensaje de éxito */}
         {showSuccess && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -413,7 +415,7 @@ const CustomOrderUpload: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

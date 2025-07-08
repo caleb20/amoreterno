@@ -20,6 +20,7 @@ export interface Product {
   discount?: number;
   image?: string;
   category?: string;
+  offer_ends_in?: string;
   category_id?: number;
   is_featured?: boolean;
   featured?: boolean;

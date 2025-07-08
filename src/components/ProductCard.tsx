@@ -135,6 +135,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
           {product.is_featured && !product.discount && (
             <span className="featured-badge">✨ Destacado</span>
           )}
+          
+          {/* Tags dinámicos - otros tags que no sean los específicos */}
+          {product.tags?.filter(tag => !['popular', 'exclusivo'].includes(tag)).map((tag, index) => (
+            <span key={index} className="bg-accent text-gray-800 px-2 py-1 rounded-full text-xs font-semibold shadow-sm">
+              {tag.charAt(0).toUpperCase() + tag.slice(1)}
+            </span>
+          ))}
         </div>
         
         {/* Badge de descuento derecha */}
@@ -215,23 +222,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
                 <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
                 </svg>
-                En stock
+                {product.stock} En stock
               </span>
             ) : (
               <span className="text-red-600 text-sm font-medium">Sin stock</span>
             )}
           </div>
         )}
-        
-        {/* Información de entrega */}
-        <div className="mt-3 text-sm">
-          <span className="flex items-center bg-mint-50 text-green-700 px-3 py-2 rounded-lg font-medium border border-mint-200">
-            <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-            </svg>
-            Entrega en 2-4 horas
-          </span>
-        </div>
 
         {/* Información de oferta válida */}
         {(product.discount || product.original_price) && (
@@ -240,7 +237,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showAddToCart = true
               <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
               </svg>
-              Oferta válida hasta 4 horas
+              Oferta válida hasta {product.offer_ends_in}
             </span>
           </div>
         )}
