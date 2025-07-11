@@ -1,4 +1,4 @@
-# Magia Florería - React Best Practices
+# Amor Eterno - React Best Practices
 
 Una aplicación web moderna para una floristería construida con React y las mejores prácticas de desarrollo.
 
@@ -97,7 +97,7 @@ src/
 ```bash
 # Clonar el repositorio
 git clone <repository-url>
-cd magia_floreria
+cd amor_eterno
 
 # Instalar dependencias
 npm install
@@ -169,6 +169,6 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 📞 Contacto
 
-Magia Florería Team - [@magiafloreria](https://twitter.com/magiafloreria)
+Amor Eterno Team - [@amoreterno](https://twitter.com/amoreterno)
 
-Link del proyecto: [https://github.com/magiafloreria/react-app](https://github.com/magiafloreria/react-app)
+Link del proyecto: [https://github.com/amoreterno/react-app](https://github.com/amoreterno/react-app)

@@ -3,6 +3,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../src/utils/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
     const { data, error } = await supabase
       .from('products')
@@ -13,11 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `);
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Error fetching products:', error);
       return res.status(500).json({ error: error.message });
     }
 
-    // Transformar el resultado para que cada producto tenga un array de occasion y tags
     const products = data.map(product => ({
       ...product,
       occasion: product.product_occasions?.map((po: any) => po.occasion_id) || [],
@@ -25,7 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }));
 
     res.status(200).json(products);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (err: any) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }

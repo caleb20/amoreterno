@@ -39,8 +39,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [selectedStation, setSelectedStation] = useState<string>("");
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('magia-cart');
-    console.log('[CartContext] localStorage magia-cart al cargar:', savedCart);
+    const savedCart = localStorage.getItem('amoreterno-cart');
+    console.log('[CartContext] localStorage amoreterno-cart al cargar:', savedCart);
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
@@ -53,8 +53,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (isCartLoaded) {
-      localStorage.setItem('magia-cart', JSON.stringify(cart));
-      console.log('[CartContext] Guardando en localStorage magia-cart:', cart);
+      localStorage.setItem('amoreterno-cart', JSON.stringify(cart));
+      console.log('[CartContext] Guardando en localStorage amoreterno-cart:', cart);
     }
   }, [cart, isCartLoaded]);
 

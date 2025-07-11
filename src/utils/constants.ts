@@ -4,9 +4,9 @@ export const APP_VERSION = '1.0.0';
 
 // Local Storage Keys
 export const STORAGE_KEYS = {
-  CART: 'magia-cart',
-  USER_PREFERENCES: 'magia-preferences',
-  NEWSLETTER_SUBSCRIPTION: 'magia-newsletter'
+  CART: 'amoreterno-cart',
+  USER_PREFERENCES: 'amoreterno-preferences',
+  NEWSLETTER_SUBSCRIPTION: 'amoreterno-newsletter'
 };
 
 // API Endpoints (for future backend integration)
@@ -103,10 +103,10 @@ export const BREAKPOINTS = {
 
 // SEO and Meta Data
 export const SEO = {
-  TITLE: 'Magia Florería - Envío de Flores a Domicilio en Lima | Entrega el Mismo Día',
+  TITLE: 'Amor Eterno - Envío de Flores a Domicilio en Lima | Entrega el Mismo Día',
   DESCRIPTION: 'Florería premium en Lima con entrega el mismo día. Ramos frescos, arreglos personalizados y regalos especiales. Envío garantizado en Lima y Callao.',
   KEYWORDS: 'flores lima, florería, envío flores, ramos, arreglos florales, entrega mismo día',
-  AUTHOR: 'Magia Florería',
+  AUTHOR: 'Amor Eterno',
   LANG: 'es'
 };
 

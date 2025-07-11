@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import database from '../data/database.json';
 import type { CompanyInfo } from '../types';
+import api from '../utils/axios';
 
 interface HeaderProps {
   scrollToOcasiones?: () => void;
@@ -106,13 +106,31 @@ const Header: React.FC<HeaderProps> = ({ scrollToOcasiones }) => {
   const { itemCount, toggleCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const companyInfo = database.companyInfo as CompanyInfo;
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCompanyInfo = async () => {
+      try {
+        const response = await api.get('/api/company-info');
+        setCompanyInfo(response.data);
+      } catch (err: any) {
+        console.error('Error fetching company info:', err);
+        setError('Error al cargar la información de la empresa.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanyInfo();
+  }, []);
 
   // Handler para detectar scroll con hysteresis para evitar vibración
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      
+
       // Usar hysteresis: diferentes umbrales para subir y bajar
       if (!isScrolled && scrollY > 100) {
         setIsScrolled(true);
@@ -150,6 +168,14 @@ const Header: React.FC<HeaderProps> = ({ scrollToOcasiones }) => {
     window.addEventListener('scrollToEstaciones', handler);
     return () => window.removeEventListener('scrollToEstaciones', handler);
   }, [scrollToSection]);
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <>
@@ -189,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToOcasiones }) => {
                   </svg>
                 </button>
                 <CartButton itemCount={itemCount} toggleCart={toggleCart} />
-                <WhatsAppButton whatsapp={companyInfo.whatsapp} />
+                <WhatsAppButton whatsapp={companyInfo?.whatsapp} />
               </div>
             </div>
           </div>

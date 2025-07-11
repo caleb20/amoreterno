@@ -2,11 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { imageBase64 } = req.body;
   let imageUrl = '';
+
   try {
     const formData = new URLSearchParams();
     formData.append('key', process.env.IMGBB_API_KEY || '');
@@ -16,11 +17,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       method: 'POST',
       body: formData,
     });
+
     const imgbbData = await imgbbRes.json();
-    imageUrl = imgbbData && imgbbData.data && imgbbData.data.url ? imgbbData.data.url : 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=compress&cs=tinysrgb&w=800';
+    imageUrl = imgbbData?.data?.url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=compress&cs=tinysrgb&w=800';
   } catch (err) {
-    imageUrl = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=compress&cs=tinysrgb&w=800';
-    // return res.status(500).json({ error: 'Error subiendo la imagen' });
+    console.error('Error uploading image:', err);
+    return res.status(500).json({ error: 'Error uploading image' });
   }
+
   res.status(200).json({ imageUrl });
 }

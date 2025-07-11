@@ -68,7 +68,10 @@ export default function Home() {
 gtag('js', new Date());
 gtag('config', 'G-XXXXXXXXXX');`
         }} />
-        <style>{`body { font-family: 'Poppins', sans-serif; }`}</style>
+        {/* Robots meta tag for SEO */}
+        <meta name="robots" content="index, follow" />
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://amoreterno.pe/" />
       </Head>
       <main className="min-h-screen bg-surface">
         <Header scrollToOcasiones={scrollToOcasiones} />

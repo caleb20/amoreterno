@@ -1,7 +1,7 @@
 {
-  "name": "magia-floreria-react",
+  "name": "amor-eterno-react",
   "version": "1.0.0",
-  "description": "Magia Florería - Flower shop landing page built with React and good programming practices",
+  "description": "Amor Eterno - Flower shop landing page built with React and good programming practices",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -58,7 +58,7 @@
     "lima",
     "floreria"
   ],
-  "author": "Magia Florería Team",
+  "author": "Amor Eterno Team",
   "license": "MIT",
   "homepage": ".",
   "proxy": "http://localhost:3001",

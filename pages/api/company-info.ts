@@ -16,7 +16,7 @@ export default async function handler(
       .select('*');
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Error fetching company info:', error);
       return res.status(500).json({ error: error.message });
     }
 
@@ -25,7 +25,8 @@ export default async function handler(
     }
 
     res.status(200).json(data[0]);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (err: any) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }

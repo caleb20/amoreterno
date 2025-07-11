@@ -10,25 +10,24 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
+
   const form = formidable({ multiples: false });
   form.parse(req, async (err: Error | null, fields: Fields, files: Files) => {
     if (err) {
-      console.error('Error formidable:', err);
-      res.status(500).json({ error: 'Error al procesar el formulario', details: err.message });
-      return;
+      console.error('Error parsing form:', err);
+      return res.status(500).json({ error: 'Error processing form', details: err.message });
     }
+
     try {
-      console.log('Campos recibidos:', fields);
-      console.log('Archivos recibidos:', files);
       let imageFile = files.image as FormidableFile | FormidableFile[] | undefined;
       if (Array.isArray(imageFile)) imageFile = imageFile[0];
       if (!imageFile || typeof imageFile.filepath !== 'string') {
-        console.error('No se recibió archivo de imagen válido:', imageFile);
-        return res.status(400).json({ error: 'No se recibió archivo de imagen válido' });
+        console.error('Invalid image file:', imageFile);
+        return res.status(400).json({ error: 'Invalid image file' });
       }
-      // 1. Subir imagen a imgbb
+
       let imageUrl = '';
       try {
         const fileData = fs.readFileSync(imageFile.filepath);
@@ -40,14 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const imgbbData = await imgbbRes.json();
         imageUrl = imgbbData.data.url;
       } catch (uploadError: any) {
-        console.error('Error al subir la imagen a imgbb:', uploadError);
-        return res.status(500).json({ error: 'Error al subir la imagen' });
+        console.error('Error uploading image to imgbb:', uploadError);
+        return res.status(500).json({ error: 'Error uploading image' });
       }
-      // Solo responder con la URL de la imagen
+
       return res.status(200).json({ success: true, imageUrl });
     } catch (error: any) {
-      console.error('Error general en custom-order:', error);
-      res.status(500).json({ error: 'Error al procesar la solicitud', details: error.message });
+      console.error('Unexpected error in custom-order:', error);
+      return res.status(500).json({ error: 'Internal server error', details: error.message });
     }
   });
 }

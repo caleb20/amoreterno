@@ -14,5 +14,11 @@ export default function handler(
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  res.status(200).json(paymentMethods);
+
+  try {
+    res.status(200).json(paymentMethods);
+  } catch (err: any) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
